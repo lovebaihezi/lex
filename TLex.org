@@ -1,0 +1,45 @@
+#+TITLE: Word rule analyzer sample and a simple lexer
+#+AUTHOR: Lqxc
+#+TODO: STARTED(s!) FIX(f!) SUSPEND(s!) | END(d!) ABORT(a@/!)
+#+DESCRIPTION: I'm not familar with the org and its mission schedule, forgive me to use it in a wrong way
+
+* About this project
+create grammar rule from the very beginning.
+first, start up with a word rule, then, create a simple lex
+** STARTED [50%] from a word rule analyzer to lex
+*** END [100%] not a strict rule
+1. [X] support all the unicode character(expect terminal control character).
+2. [X] ident word can't start with the {
+    `, ~, !, @, #, $, %, ^, &, *, (, ), {, }, [, ], ', ", <, >, ?, /, \, |, ;, :
+    ...ascii numbers
+   }
+3. [X] key words
+   {
+    back move F Y yield async await trait
+    implement for bind type enum struct
+    parallel cast tobe module where loop
+    while when match macro public dynamic
+    box atomic const static lazy in from
+    to reference extern do algin mutable
+   }
+4. [X] Sign
+   {
+    { + - * / = < > ? / ` ! @ # $ % ^ & * ( ) { } [ ] | / ; : " ' , . \ };
+    { => <= >= =< <- -> |> :: ?? !! || };
+    {  }
+   }
+*** STARTED [0%] Word Rule analyzer
+1. [-] parse from args
+2. [-] get char stream
+3. [-] type enum define
+4. [-] read stream, generate token
+** STARTED [0%] Lex
+*** STARTED [0%] lex: design lex description
+*** STARTED [0%] lex: from regular rules to NFA(and NFA to regular rules)
+ 1. [] regular rule:
+     parse regular expression: Closure(Closure(Parentheses) . Closure(Character) . Closure(Parentheses))
+ 2. [] digraph
+ 3. [] add node to digraph from regular
+*** STARTED [0%] lex: from NFA to DFA
+*** STARTED [0%] lex: optimize DFA
+*** STARTED [0%] lex: generate Token Stream according to DFA from char Stream
