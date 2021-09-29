@@ -119,7 +119,6 @@ impl<'a> Iterator for WordStream<'a> {
     type Item = Result<Word, WordError>;
 
     fn next(&mut self) -> Option<Self::Item> {
-        self.stream.take_while(predicate)
         while let Some(c) = self.stream.next() {
             let mut v = if c.is_whitespace() {
                 if c == '\n' {
