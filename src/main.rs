@@ -8,6 +8,10 @@ fn main() {
     } else {
         std::fs::read_to_string(arg).unwrap()
     };
+    let file = std::fs::OpenOptions::new()
+        .read(true)
+        .open("src/word.rs")
+        .unwrap();
     let mut token = TokenStream::from(&stream);
     println!("{:?}", &token);
     let first = token.next();

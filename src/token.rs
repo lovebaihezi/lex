@@ -1,6 +1,6 @@
-use std::{cell::RefCell, convert::TryFrom, rc::Rc, str::Chars};
+use std::{cell::RefCell, convert::TryFrom, rc::Rc};
 
-use crate::word::WordStream;
+use crate::word::{Word, WordStream};
 #[derive(Debug, Clone)]
 pub enum Constant {
     Number(RefCell<String>),
@@ -123,9 +123,15 @@ pub enum Tokens {
     Empty,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub struct TokenStream<'a> {
-    stream: Rc<RefCell<WordStream<'a>>>,
+    stream: WordStream<'a>,
+}
+
+impl From<Word> for Tokens {
+    fn from(_: Word) -> Self {
+        todo!()
+    }
 }
 
 #[derive(Debug)]
@@ -138,7 +144,7 @@ impl<'a, 'b: 'a> From<&'b str> for TokenStream<'a> {
     #[inline]
     fn from(v: &'b str) -> Self {
         TokenStream {
-            stream: Rc::new(RefCell::new(WordStream::from(v))),
+            stream: WordStream::from(v),
         }
     }
 }
@@ -147,13 +153,14 @@ impl<'a, 'b: 'a> From<&'b String> for TokenStream<'a> {
     #[inline]
     fn from(v: &'b String) -> Self {
         TokenStream {
-            stream: Rc::new(RefCell::new(WordStream::from(v))),
+            stream: WordStream::from(v),
         }
     }
 }
 
 impl<'a> Iterator for TokenStream<'a> {
     fn next(self: &mut TokenStream<'a>) -> Option<Self::Item> {
+        while let Some(word) = self.stream.next() {}
         None
     }
 

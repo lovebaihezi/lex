@@ -14,6 +14,7 @@ pub enum Words {
     Sign(char),
     Word(String),
     Empty,
+    BreakLine,
 }
 
 impl Default for Words {
@@ -29,7 +30,8 @@ impl Display for Words {
             match self {
                 Words::Sign(v) => String::from(*v),
                 Words::Word(s) => format!("{}", s),
-                Words::Empty => "   ".to_string(),
+                Words::Empty => " ".to_string(),
+                Words::BreakLine => String::from('\n'),
             }
         ))
     }
@@ -43,14 +45,14 @@ pub enum WordError {
 pub struct Word {
     pub line: u32,
     pub col: [u32; 2],
-    pub word: Words,
+    pub content: Words,
 }
 
 impl Debug for Word {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.write_fmt(format_args!(
             "{:?} line: {}, col: {}",
-            self.word,
+            self.content,
             self.line,
             if self.col[0] == self.col[1] {
                 format!("{}", self.col[0])
@@ -67,7 +69,7 @@ impl Default for Word {
         Self {
             line: Default::default(),
             col: Default::default(),
-            word: Default::default(),
+            content: Default::default(),
         }
     }
 }
@@ -108,6 +110,13 @@ impl<'a, 'b: 'a> From<&'b str> for WordStream<'a> {
 
 impl<'a> WordStream<'a> {
     fn calc(&mut self, from: &mut Result<Words, WordError>) -> [u32; 2] {
+        match &self.word {
+            Ok(Words::BreakLine) => {
+                self.line += 1;
+                self.col = [0; 2];
+            }
+            _ => {}
+        }
         swap(from, &mut self.word);
         let col = self.col;
         self.col = [col[1]; 2];
@@ -122,14 +131,10 @@ impl<'a> Iterator for WordStream<'a> {
         while let Some(c) = self.stream.next() {
             let mut v = if c.is_whitespace() {
                 if c == '\n' {
-                    self.line += 1;
-                    self.col = [0, 0];
+                    Ok(Words::BreakLine)
                 } else {
                     self.col[1] += 1;
-                }
-                match &self.word {
-                    Ok(Words::Empty) => continue,
-                    _ => Ok(Words::Empty),
+                    Ok(Words::Empty)
                 }
             } else if c.is_control() {
                 Err(WordError::ControlCode)
@@ -146,27 +151,17 @@ impl<'a> Iterator for WordStream<'a> {
                     _ => Ok(Words::Word(String::from(c))),
                 }
             };
+            let line = self.line;
             let col = self.calc(&mut v);
-            return Some(v.and_then(|word| {
-                Ok(Word {
-                    word,
-                    col,
-                    line: self.line,
-                })
-            }));
+            return Some(v.and_then(|content| Ok(Word { content, col, line })));
         }
         let mut empty = Ok(Words::Empty);
         match &self.word {
             Ok(Words::Empty) => None,
             _ => {
+                let line = self.line;
                 let col = self.calc(&mut empty);
-                Some(empty.and_then(|word| {
-                    Ok(Word {
-                        word,
-                        col,
-                        line: self.line,
-                    })
-                }))
+                Some(empty.and_then(|content| Ok(Word { content, col, line })))
             }
         }
     }
@@ -180,8 +175,8 @@ mod word_test {
     #[test]
     fn word_stream_example() {
         //            0123456789ABCD
-        //                          0123456789ABC
-        let s = "   [>123<}  123\n456(>7891123";
+        //                             0123456789ABC
+        let s = "   [>123<}  123\n456(>7891123;";
         // let mut self = WordStream::from(s.clone());
         for i in WordStream::from(s.clone()) {
             println!("{:?}", i.unwrap());
@@ -218,10 +213,7 @@ mod word_test {
             .reduce(|prev, v| {
                 match (&prev, &v) {
                     (Ok(v1), Ok(v2)) => {
-                        file.write(format!("{}", v1.word).as_bytes()).unwrap();
-                        if v1.line != v2.line {
-                            file.write("\n".as_bytes()).unwrap();
-                        }
+                        file.write(format!("{}", v1.content).as_bytes()).unwrap();
                     }
                     _ => panic!(),
                 }
