@@ -1,0 +1,29 @@
+use std::ffi::os::linux::write;
+
+F[i32] ~> unit print v = {
+    write(&v cast * i32);
+}
+
+struct [T :< Y] Test {
+    value: T
+}
+
+F[unit] ~> i32 main = {
+    let value: Y[i32, u32] = v { v as u32 }; // Closure
+    let x = #[1, 2, 3]; // Array Constant
+    let v = *{&x cast};
+    let x = #(1, "2", #(Some(1)); // Tuple Constant
+    let x = <| x -> box 1, y -> 2 |>; // Map
+    let x : Test = box Test #{ value }; // Test heap
+    let c = '\u{0000}'; // char
+    let s = "\u{1234}\u{4567}\u{7890}"; // &string
+    let y: async block bool = async {
+        false
+    }
+    let x : bool = 1 > 2;
+    for i in 0 to 1000 do {
+        i :-> print
+    }
+    print[1];
+    back 1;
+}

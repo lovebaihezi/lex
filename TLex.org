@@ -1,7 +1,7 @@
 #+TITLE: Word rule analyzer sample and a simple lexer
 #+AUTHOR: Lqxc
 #+TODO: STARTED(s!) FIX(f!) SUSPEND(s!) | END(d!) ABORT(a@/!)
-#+DESCRIPTION: I'm not familar with the org and its mission schedule, forgive me to use it in a wrong way
+#+DESCRIPTION: I'm not familiar with the org and its mission schedule, forgive me to use it in a wrong way
 
 * About this project
 create grammar rule from the very beginning.
@@ -9,10 +9,7 @@ first, start up with a word rule, then, create a simple lex
 ** STARTED [50%] from a word rule analyzer to lex
 *** END [100%] not a strict rule
 1. [X] support all the unicode character(expect terminal control character).
-2. [X] ident word can't start with the {
-    `, ~, !, @, #, $, %, ^, &, *, (, ), {, }, [, ], ', ", <, >, ?, /, \, |, ;, :
-    ...ascii numbers
-   }
+2. [X] ident word can't start with the ascii number
 3. [X] key words
    {
     back move F Y yield async await trait
@@ -21,18 +18,25 @@ first, start up with a word rule, then, create a simple lex
     while when match macro public dynamic
     box atomic const static lazy in from
     to reference extern do algin mutable
+    block expression
    }
 4. [X] Sign
    {
-    { + - * / = < > ? / ` ! @ # $ % ^ & * ( ) { } [ ] | / ; : " ' , . \ };
-    { => <= >= =< <- -> |> :: ?? !! || };
-    {  }
+    { ! " # $ % & ' ( ) * + , - . / : ; < = > ? @ [ \ ] ^ _ ` { | } ~  };
+    {
+        == => <= >= =< <- -> |> :: ?? !! || := |=  >> << != <| .? .! *= += 
+        -= /= ## && ^^ {| |} [| |] :> <: ~>
+    };
+    { === ... !== >>> :-> -:> }
    }
-*** STARTED [0%] Word Rule analyzer
-1. [-] parse from args
-2. [-] get char stream
-3. [-] type enum define
-4. [-] read stream, generate token
+*** STARTED [66%] Word Rule analyzer
+**** STARTED parse from args 
+**** END get char stream
+**** STARTED type enum define
+    *Struct* TokenStream ::: WordStream
+    *Struct* Token       ::: Word
+    *Enum*   Tokens      ::: Words
+**** stream, generate token
 ** STARTED [0%] Lex
 *** STARTED [0%] lex: design lex description
 *** STARTED [0%] lex: from regular rules to NFA(and NFA to regular rules)

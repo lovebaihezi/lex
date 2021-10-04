@@ -1,10 +1,5 @@
 use std::{
-    cell::RefCell,
-    convert::TryInto,
-    default,
-    fmt::{Debug, Display, Write},
-    mem::swap,
-    rc::Rc,
+    fmt::{Debug, Display},
     str::Chars,
 };
 
@@ -41,45 +36,32 @@ impl Display for Words {
 pub enum WordError {
     ControlCode,
 }
+// #[derive(Default)]
+// pub struct Word {
+//     pub content: Words,
+// }
 
-pub struct Word {
-    pub line: u32,
-    pub col: [u32; 2],
-    pub content: Words,
-}
-
-impl Debug for Word {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_fmt(format_args!(
-            "{:?} line: {}, col: {}",
-            self.content,
-            self.line,
-            if self.col[0] == self.col[1] {
-                format!("{}", self.col[0])
-            } else {
-                format!("{}~{}", self.col[0], self.col[1])
-            }
-        ))
-    }
-}
-
-impl Default for Word {
-    #[inline]
-    fn default() -> Self {
-        Self {
-            line: Default::default(),
-            col: Default::default(),
-            content: Default::default(),
-        }
-    }
-}
+// impl Debug for Word {
+//     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+//         f.write_fmt(format_args!(
+//             "{:?} line: {}, col: {}",
+//             self.content,
+//             self.line,
+//             if self.col[0] == self.col[1] {
+//                 format!("{}", self.col[0])
+//             } else {
+//                 format!("{}~{}", self.col[0], self.col[1])
+//             }
+//         ))
+//     }
+// }
 
 #[derive(Debug)]
 pub struct WordStream<'a> {
     stream: Chars<'a>,
     word: Result<Words, WordError>,
-    line: u32,
-    col: [u32; 2],
+    // line: u32,
+    // col: [u32; 2],
 }
 
 impl<'a, 'b: 'a> WordStream<'a> {
@@ -88,8 +70,8 @@ impl<'a, 'b: 'a> WordStream<'a> {
         Self {
             stream: stream.chars(),
             word: Ok(Default::default()),
-            line: 0,
-            col: Default::default(),
+            // line: 0,
+            // col: Default::default(),
         }
     }
 }
@@ -108,24 +90,24 @@ impl<'a, 'b: 'a> From<&'b str> for WordStream<'a> {
     }
 }
 
-impl<'a> WordStream<'a> {
-    fn calc(&mut self, from: &mut Result<Words, WordError>) -> [u32; 2] {
-        match &self.word {
-            Ok(Words::BreakLine) => {
-                self.line += 1;
-                self.col = [0; 2];
-            }
-            _ => {}
-        }
-        swap(from, &mut self.word);
-        let col = self.col;
-        self.col = [col[1]; 2];
-        col
-    }
-}
+// impl<'a> WordStream<'a> {
+//     fn calc(&mut self, from: &mut Result<Words, WordError>) {
+//         match &self.word {
+//             Ok(Words::BreakLine) => {
+//                 self.line += 1;
+//                 self.col = [0; 2];
+//             }
+//             _ => {}
+//         }
+//         swap(from, &mut self.word);
+//         let col = self.col;
+//         self.col = [col[1]; 2];
+//         col
+//     }
+// }
 
 impl<'a> Iterator for WordStream<'a> {
-    type Item = Result<Word, WordError>;
+    type Item = Result<Words, WordError>;
 
     fn next(&mut self) -> Option<Self::Item> {
         while let Some(c) = self.stream.next() {
@@ -133,16 +115,13 @@ impl<'a> Iterator for WordStream<'a> {
                 if c == '\n' {
                     Ok(Words::BreakLine)
                 } else {
-                    self.col[1] += 1;
                     Ok(Words::Empty)
                 }
             } else if c.is_control() {
                 Err(WordError::ControlCode)
             } else if c.is_ascii_punctuation() {
-                self.col[1] += 1;
                 Ok(Words::Sign(c))
             } else {
-                self.col[1] += 1;
                 match &mut self.word {
                     Ok(Words::Word(s)) => {
                         s.push(c);
@@ -151,17 +130,17 @@ impl<'a> Iterator for WordStream<'a> {
                     _ => Ok(Words::Word(String::from(c))),
                 }
             };
-            let line = self.line;
-            let col = self.calc(&mut v);
-            return Some(v.and_then(|content| Ok(Word { content, col, line })));
+            // let line = self.line;
+            // let col = self.calc(&mut v);
+            return Some(v.and_then(|content| Ok(content)));
         }
-        let mut empty = Ok(Words::Empty);
         match &self.word {
             Ok(Words::Empty) => None,
             _ => {
-                let line = self.line;
-                let col = self.calc(&mut empty);
-                Some(empty.and_then(|content| Ok(Word { content, col, line })))
+                let mut empty = Ok(Words::Empty);
+                // let line = self.line;
+                // let col = self.calc(&mut empty);
+                Some(empty.and_then(|content| Ok(content)))
             }
         }
     }
@@ -169,14 +148,13 @@ impl<'a> Iterator for WordStream<'a> {
 
 #[cfg(test)]
 mod word_test {
-    use std::io::Write;
 
     use super::WordStream;
     #[test]
     fn word_stream_example() {
         //            0123456789ABCD
         //                             0123456789ABC
-        let s = "   [>123<}  123\n456(>7891123;";
+        let s = "   [>123<}  123\n456(>7891123;    ";
         // let mut self = WordStream::from(s.clone());
         for i in WordStream::from(s.clone()) {
             println!("{:?}", i.unwrap());
@@ -205,15 +183,16 @@ mod word_test {
         for i in WordStream::from(&s.clone()) {
             println!("{:?}", i.unwrap());
         }
-        let mut file = std::fs::OpenOptions::new()
-            .append(true)
-            .open("fake.rs")
-            .unwrap();
+        // let mut file = std::fs::OpenOptions::new()
+        //     .create(true)
+        //     .append(true)
+        //     .open("fake.rs")
+        //     .unwrap();
         WordStream::from(&s.clone())
             .reduce(|prev, v| {
                 match (&prev, &v) {
                     (Ok(v1), Ok(v2)) => {
-                        file.write(format!("{}", v1.content).as_bytes()).unwrap();
+                        print!("{}", v1);
                     }
                     _ => panic!(),
                 }

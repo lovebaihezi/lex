@@ -4,3 +4,4 @@ pub mod lex;
 pub mod regular;
 pub mod token;
 pub mod word;
+pub mod pre_work;
