@@ -1,5 +1,6 @@
 use std::{
     fmt::{Debug, Display},
+    mem::swap,
     str::Chars,
 };
 
@@ -8,6 +9,7 @@ use std::{
 pub enum Words {
     Sign(char),
     Word(String),
+    // Comment(String),
     Empty,
     BreakLine,
 }
@@ -25,6 +27,7 @@ impl Display for Words {
             match self {
                 Words::Sign(v) => String::from(*v),
                 Words::Word(s) => format!("{}", s),
+                // Words::Comment(s) => format!("{}", s),
                 Words::Empty => " ".to_string(),
                 Words::BreakLine => String::from('\n'),
             }
@@ -90,22 +93,6 @@ impl<'a, 'b: 'a> From<&'b str> for WordStream<'a> {
     }
 }
 
-// impl<'a> WordStream<'a> {
-//     fn calc(&mut self, from: &mut Result<Words, WordError>) {
-//         match &self.word {
-//             Ok(Words::BreakLine) => {
-//                 self.line += 1;
-//                 self.col = [0; 2];
-//             }
-//             _ => {}
-//         }
-//         swap(from, &mut self.word);
-//         let col = self.col;
-//         self.col = [col[1]; 2];
-//         col
-//     }
-// }
-
 impl<'a> Iterator for WordStream<'a> {
     type Item = Result<Words, WordError>;
 
@@ -130,16 +117,14 @@ impl<'a> Iterator for WordStream<'a> {
                     _ => Ok(Words::Word(String::from(c))),
                 }
             };
-            // let line = self.line;
-            // let col = self.calc(&mut v);
+            swap(&mut v, &mut self.word);
             return Some(v.and_then(|content| Ok(content)));
         }
         match &self.word {
             Ok(Words::Empty) => None,
             _ => {
                 let mut empty = Ok(Words::Empty);
-                // let line = self.line;
-                // let col = self.calc(&mut empty);
+                swap(&mut empty, &mut self.word);
                 Some(empty.and_then(|content| Ok(content)))
             }
         }
@@ -179,27 +164,10 @@ mod word_test {
 
     #[test]
     fn word_stream_test_read_code() {
-        let s = std::fs::read_to_string("src/word.rs").unwrap();
+        let s = std::fs::read_to_string("src.lq").unwrap();
         for i in WordStream::from(&s.clone()) {
             println!("{:?}", i.unwrap());
         }
-        // let mut file = std::fs::OpenOptions::new()
-        //     .create(true)
-        //     .append(true)
-        //     .open("fake.rs")
-        //     .unwrap();
-        WordStream::from(&s.clone())
-            .reduce(|prev, v| {
-                match (&prev, &v) {
-                    (Ok(v1), Ok(v2)) => {
-                        print!("{}", v1);
-                    }
-                    _ => panic!(),
-                }
-                v
-            })
-            .unwrap()
-            .unwrap();
     }
     #[test]
     fn sample() {

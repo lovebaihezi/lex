@@ -1,159 +1,121 @@
+use crate::word::{WordError, WordStream, Words};
 use std::{
-    cell::RefCell,
-    collections::HashMap,
     convert::{TryFrom, TryInto},
     mem::swap,
     ops::Add,
-    rc::Rc,
-    thread::__FastLocalKeyInner,
 };
 
-use crate::word::{Word, WordError, WordStream, Words};
-#[derive(Debug, Clone)]
-pub enum Constant {
-    Number(String),
-    Chars(char),
-    Strings(String),
-}
-
-#[derive(Debug, Clone)]
-pub enum KeyWords {
-    Back,
-    Move,
-    F,
-    Y,
-    Yield,
-    Async,
-    Await,
-    Trait,
-    Implement,
-    For,
-    Bind,
-    Type,
-    Enum,
-    Struct,
-    Parallel,
-    Cast,
-    Tobe,
-    Module,
-    Where,
-    Loop,
-    While,
-    When,
-    Match,
-    Macro,
-    Public,
-    Dynamic,
-    Box,
-    Atomic,
-    Const,
-    Static,
-    Lazy,
-    In,
-    From,
-    To,
-    Reference,
-    Extern,
-    Do,
-    Algin,
-    Mutable,
-    Block,
-    Expression,
-}
-
-impl ToString for KeyWords {
-    fn to_string(&self) -> String {
-        match self {
-            Self::Back => "back",
-            Self::Move => "move",
-            Self::F => "F",
-            Self::Y => "Y",
-            Self::Yield => "yield",
-            Self::Async => "async",
-            Self::Await => "await",
-            Self::Trait => "trait",
-            Self::Implement => "implement",
-            Self::For => "for",
-            Self::Bind => "bind",
-            Self::Type => "type",
-            Self::Enum => "enum",
-            Self::Struct => "struct",
-            Self::Parallel => "parallel",
-            Self::Cast => "cast",
-            Self::Tobe => "tobe",
-            Self::Module => "module",
-            Self::Where => "where",
-            Self::Loop => "loop",
-            Self::While => "while",
-            Self::When => "when",
-            Self::Match => "match",
-            Self::Macro => "macro",
-            Self::Public => "public",
-            Self::Dynamic => "dynamic",
-            Self::Box => "box",
-            Self::Atomic => "atomic",
-            Self::Const => "const",
-            Self::Static => "static",
-            Self::Lazy => "lazy",
-            Self::In => "in",
-            Self::From => "from",
-            Self::To => "to",
-            Self::Reference => "reference",
-            Self::Extern => "extern",
-            Self::Do => "do",
-            Self::Algin => "algin",
-            Self::Mutable => "mutable",
-            Self::Block => "block",
-            Self::Expression => "expression",
+macro_rules! KeyWords {
+    ({$($derive: path),*$(,)*}, $($id:ident),*$(,)*) => {
+        #[derive($($derive),*)]
+        pub enum KeyWords {
+            $($id,)+
         }
-        .to_string()
-    }
+        const LEN:usize = [$(KeyWords::$id,)+].len();
+        const KEYWORDS_ARRAY: [KeyWords; LEN] = [$(KeyWords::$id,)+];
+        const KEYWORDS_STRING: [&'static str; LEN] = [$(stringify!(KeyWords::$id),)+];
+        const KEYWORDS_LENGTHS: [u32; LEN] = [$(stringify!($id).len() as u32,)+];
+        impl KeyWords {
+            #[inline]
+            fn len(&self) -> u32 {
+                unsafe { *KEYWORDS_LENGTHS.get_unchecked(*self as usize) }
+            }
+            #[inline]
+            fn get_all<'a>() -> &'a [KeyWords] {
+                &KEYWORDS_ARRAY
+            }
+        }
+        impl<'a> TryFrom<&'a str> for KeyWords {
+            type Error = &'a str;
+            fn try_from(value: &'a str) -> Result<Self, Self::Error> {
+                match value {
+                    $(
+                        stringify!($id) => Ok(Self::$id),
+                    )+
+                    _ => Err(value)
+                }
+            }
+        }
+        impl ToString for KeyWords {
+            #[inline]
+            fn to_string(&self) -> String {
+                unsafe { String::from(*KEYWORDS_STRING.get_unchecked(*self as usize)) }
+            }
+        }
+    };
 }
 
-impl KeyWords {
-    fn length(&self) -> u32 {
+macro_rules! Convert {
+    ($e: ident) => {
+        impl From<$e> for Sign {
+            #[inline]
+            fn from(v: $e) -> Self {
+                Self::$e(v)
+            }
+        }
+    };
+    ($e: ident, $x: ident) => {
+        impl From<$e> for $x {
+            #[inline]
+            fn from(v: $e) -> Self {
+                Self::$e(v)
+            }
+        }
+    };
+}
+
+macro_rules! SignAdd {
+    {$(($v: path | $v1: path)) ,* $(,)*} => {
+        impl Add for Sign {
+            type Output = Option<Sign>;
+            #[inline]
+            fn add(self, rhs: Self) -> Self::Output {
+                match (self, rhs) {
+                    $(($v(v), $v1(v1)) => match v + v1 {
+                        Some(v) => Some(v.into()),
+                        None => None,
+                    },)+
+                    _ => None,
+                }
+            }
+        }
+    };
+}
+
+KeyWords! ({Debug, Clone, Copy},
+    Back ,Move, F, Y, Yield, Async, Await, Trait,
+    Implement, For, Bind, Type, Enum, Struct,
+    Parallel, Cast, Tobe, Module, Where, Loop,
+    While, When, Match, Macro, Public, Dynamic,
+    Box, Atomic, Const, Static, Lazy, In, From,
+    To, Reference, Extern, Do, Algin, Mutable,
+    Block, Expression,
+);
+
+macro_rules! ConstArray {
+    ($name: ident, [$($id: ty),*$(,)*]) => {
+        const $name: [&'static str; [$(stringify!($id)),*].len()] = [$(stringify!($id),)*];
+    };
+}
+
+ConstArray!(
+    NUMBER_TYPE,
+    [i8, i16, i32, i64, i128, u8, u16, u32, u64, u128, usize, isize,]
+);
+
+#[derive(Debug)]
+pub enum Constant {
+    String(String),
+    Char(char),
+    Number(String),
+}
+
+impl Constant {
+    fn len(&self) -> u32 {
         match self {
-            KeyWords::Back => 4,
-            KeyWords::Move => 4,
-            KeyWords::F => 1,
-            KeyWords::Y => 1,
-            KeyWords::Yield => 5,
-            KeyWords::Async => 5,
-            KeyWords::Await => 5,
-            KeyWords::Trait => 5,
-            KeyWords::Implement => 9,
-            KeyWords::For => 3,
-            KeyWords::Bind => 4,
-            KeyWords::Type => 4,
-            KeyWords::Enum => 4,
-            KeyWords::Struct => 6,
-            KeyWords::Parallel => 8,
-            KeyWords::Cast => 4,
-            KeyWords::Tobe => 4,
-            KeyWords::Module => 6,
-            KeyWords::Where => 5,
-            KeyWords::Loop => 4,
-            KeyWords::While => 5,
-            KeyWords::When => 4,
-            KeyWords::Match => 5,
-            KeyWords::Macro => 5,
-            KeyWords::Public => 6,
-            KeyWords::Dynamic => 7,
-            KeyWords::Box => 3,
-            KeyWords::Atomic => 6,
-            KeyWords::Const => 5,
-            KeyWords::Static => 6,
-            KeyWords::Lazy => 4,
-            KeyWords::In => 2,
-            KeyWords::From => 4,
-            KeyWords::To => 2,
-            KeyWords::Reference => 9,
-            KeyWords::Extern => 6,
-            KeyWords::Do => 2,
-            KeyWords::Algin => 5,
-            KeyWords::Mutable => 7,
-            KeyWords::Block => 5,
-            KeyWords::Expression => 10,
+            Constant::Char(_) => 1,
+            Constant::String(s) | Constant::Number(s) => s.len() as u32,
+            //  => s.len() as u32,
         }
     }
 }
@@ -200,10 +162,10 @@ pub enum Single {
     Tilde,              // ~
 }
 
-const fn create_ascii_map() -> [Result<Single, SignError>; 126] {
-    let mut arr = [Err(SignError::NotSign); 126];
+const fn create_ascii_map() -> [Result<Single, SignError>; 127] {
+    let mut arr = [Err(SignError::NotSign); 127];
     let mut index = 0u8;
-    while index < 126 {
+    while index <= 126 {
         arr[index as usize] = match index as char {
             '!' => Ok(Single::Exclamation),
             '"' => Ok(Single::Quotation),
@@ -244,7 +206,7 @@ const fn create_ascii_map() -> [Result<Single, SignError>; 126] {
     arr
 }
 
-static MAP: [Result<Single, SignError>; 126] = create_ascii_map();
+static MAP: [Result<Single, SignError>; 127] = create_ascii_map();
 
 impl TryFrom<char> for Single {
     type Error = SignError;
@@ -297,7 +259,7 @@ impl Into<char> for Single {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub enum Double {
     EqualEqual,                    // ==
     EqualGreater,                  // =>
@@ -322,7 +284,7 @@ pub enum Double {
     AsteriskEqual,                 // *=
     PlusEqual,                     // +=
     MinusEqual,                    // -=
-    DivideEqual,                   // /=
+    SlashEqual,                    // /=
     HashHash,                      // ##
     AmpersandAmpersand,            // &&
     CaretCaret,                    // ^^
@@ -330,9 +292,51 @@ pub enum Double {
     VerticalBarRightCurlyBracket,  // |}
     LeftSquareBracketVerticalBar,  // [|
     VerticalBarRightSquareBracket, // |]
+    PeriodPeriod,                  // ..
+    SlashSlash,                    // //
 }
 
-#[derive(Debug)]
+impl Into<[char; 2]> for Double {
+    fn into(self) -> [char; 2] {
+        match self {
+            Self::EqualEqual => ['=', '='],
+            Self::EqualGreater => ['=', '>'],
+            Self::LessEqual => ['<', '='],
+            Self::GreaterEqual => ['>', '='],
+            Self::EqualLess => ['=', '<'],
+            Self::LessMinus => ['<', '-'],
+            Self::MinusGreater => ['-', '>'],
+            Self::VerticalBarGreater => ['|', '>'],
+            Self::ColonColon => [':', ':'],
+            Self::QuestionQuestion => ['?', '?'],
+            Self::ExclamationExclamation => ['!', '!'],
+            Self::VerticalBarVerticalBar => ['|', '|'],
+            Self::ColonEqual => [':', '='],
+            Self::VerticalBarEqual => ['|', '='],
+            Self::GreaterGreater => ['>', '>'],
+            Self::LessLess => ['<', '<'],
+            Self::ExclamationEqual => ['!', '='],
+            Self::LessVerticalBar => ['<', '|'],
+            Self::PeriodQuestion => ['.', '?'],
+            Self::PeriodExclamation => ['.', '!'],
+            Self::AsteriskEqual => ['*', '='],
+            Self::PlusEqual => ['+', '='],
+            Self::MinusEqual => ['-', '='],
+            Self::SlashEqual => ['/', '='],
+            Self::HashHash => ['#', '#'],
+            Self::AmpersandAmpersand => ['&', '&'],
+            Self::CaretCaret => ['^', '^'],
+            Self::LeftCurlyBracketVerticalBar => ['{', '|'],
+            Self::VerticalBarRightCurlyBracket => ['|', '}'],
+            Self::LeftSquareBracketVerticalBar => ['[', '|'],
+            Self::VerticalBarRightSquareBracket => ['|', ']'],
+            Self::PeriodPeriod => ['.', '.'],
+            Self::SlashSlash => ['/', '/'],
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy)]
 pub enum Triple {
     EqualEqualEqual,       // ===
     PeriodPeriodPeriod,    // ...
@@ -340,14 +344,85 @@ pub enum Triple {
     GreaterGreaterGreater, // >>>
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub enum Quadruple {}
 
 impl Add for Single {
     type Output = Option<Double>;
 
+    /*
+    Equal,Equal
+    Equal,Greater
+    Less,Equal
+    Greater,Equal
+    Equal,Less
+    Less,Minus
+    Minus,Greater
+    VerticalBar,Greater
+    Colon,Colon
+    Question,Question
+    Exclamation,Exclamation
+    VerticalBar,VerticalBar
+    Colon,Equal
+    VerticalBar,Equal
+    Greater,Greater
+    Less,Less
+    Exclamation,Equal
+    Less,VerticalBar
+    Period,Question
+    Period,Exclamation
+    Asterisk,Equal
+    Plus,Equal
+    Minus,Equal
+    Divide,Equal
+    Hash,Hash
+    Ampersand,Ampersand
+    Caret,Caret
+    LeftCurlyBracket,VerticalBar
+    VerticalBar,RightCurlyBracket
+    LeftSquareBracket,VerticalBar
+    VerticalBar,RightSquareBracket
+    Period,Period
+    */
+
     fn add(self, rhs: Self) -> Self::Output {
-        todo!()
+        use Double::*;
+        match (self, rhs) {
+            (Self::Equal, Self::Equal) => Some(EqualEqual),
+            (Self::Equal, Self::Greater) => Some(EqualGreater),
+            (Self::Less, Self::Equal) => Some(LessEqual),
+            (Self::Greater, Self::Equal) => Some(GreaterEqual),
+            (Self::Equal, Self::Less) => Some(EqualLess),
+            (Self::Less, Self::Minus) => Some(LessMinus),
+            (Self::Minus, Self::Greater) => Some(MinusGreater),
+            (Self::VerticalBar, Self::Greater) => Some(VerticalBarGreater),
+            (Self::Colon, Self::Colon) => Some(ColonColon),
+            (Self::Question, Self::Question) => Some(QuestionQuestion),
+            (Self::Exclamation, Self::Exclamation) => Some(ExclamationExclamation),
+            (Self::VerticalBar, Self::VerticalBar) => Some(VerticalBarVerticalBar),
+            (Self::Colon, Self::Equal) => Some(ColonEqual),
+            (Self::VerticalBar, Self::Equal) => Some(VerticalBarEqual),
+            (Self::Greater, Self::Greater) => Some(GreaterGreater),
+            (Self::Less, Self::Less) => Some(LessLess),
+            (Self::Exclamation, Self::Equal) => Some(ExclamationEqual),
+            (Self::Less, Self::VerticalBar) => Some(LessVerticalBar),
+            (Self::Period, Self::Question) => Some(PeriodQuestion),
+            (Self::Period, Self::Exclamation) => Some(PeriodExclamation),
+            (Self::Asterisk, Self::Equal) => Some(AsteriskEqual),
+            (Self::Plus, Self::Equal) => Some(PlusEqual),
+            (Self::Minus, Self::Equal) => Some(MinusEqual),
+            (Self::Slash, Self::Equal) => Some(SlashEqual),
+            (Self::Hash, Self::Hash) => Some(HashHash),
+            (Self::Ampersand, Self::Ampersand) => Some(AmpersandAmpersand),
+            (Self::Caret, Self::Caret) => Some(CaretCaret),
+            (Self::LeftCurlyBracket, Self::VerticalBar) => Some(LeftCurlyBracketVerticalBar),
+            (Self::VerticalBar, Self::RightCurlyBracket) => Some(VerticalBarRightCurlyBracket),
+            (Self::LeftSquareBracket, Self::VerticalBar) => Some(LeftSquareBracketVerticalBar),
+            (Self::VerticalBar, Self::RightSquareBracket) => Some(VerticalBarRightSquareBracket),
+            (Self::Period, Self::Period) => Some(PeriodPeriod),
+            (Self::Slash, Self::Slash) => Some(SlashSlash),
+            _ => None,
+        }
     }
 }
 
@@ -357,6 +432,9 @@ impl Add<Double> for Single {
     fn add(self, rhs: Double) -> Self::Output {
         match (self, rhs) {
             (Single::Equal, Double::EqualEqual) => Some(Triple::EqualEqualEqual),
+            (Single::Exclamation, Double::EqualEqual) => Some(Triple::ExclamationEqualEqual),
+            (Single::Period, Double::PeriodPeriod) => Some(Triple::PeriodPeriodPeriod),
+            (Single::Greater, Double::GreaterGreater) => Some(Triple::GreaterGreaterGreater),
             _ => None,
         }
     }
@@ -366,11 +444,11 @@ impl Add<Single> for Double {
     type Output = Option<Triple>;
 
     fn add(self, rhs: Single) -> Self::Output {
-        todo!()
+        rhs + self
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub enum Sign {
     Single(Single),
     Double(Double),
@@ -379,7 +457,7 @@ pub enum Sign {
 }
 
 impl Sign {
-    fn length(&self) -> u32 {
+    fn len(&self) -> u32 {
         match self {
             Self::Single(_) => 1,
             Self::Double(_) => 2,
@@ -389,17 +467,20 @@ impl Sign {
     }
 }
 
-impl Add for Sign {
-    type Output = Option<Sign>;
+Convert!(Single);
+Convert!(Double);
+Convert!(Triple);
+Convert!(Quadruple);
 
-    fn add(self, rhs: Self) -> Self::Output {
-        todo!()
-    }
+SignAdd! {
+    (Sign::Single | Sign::Single),
+    (Sign::Single | Sign::Double),
+    (Sign::Double | Sign::Single)
 }
 
 #[derive(Debug)]
 pub enum Tokens {
-    Identify(String),
+    Ident(String),
     KeyWords(KeyWords),
     Constant(Constant),
     Comment(String),
@@ -408,10 +489,39 @@ pub enum Tokens {
     BreakLine,
 }
 
+impl ToString for Tokens {
+    fn to_string(&self) -> String {
+        match self {
+            Tokens::Ident(s) => format!("{}", s),
+            Tokens::KeyWords(s) => todo!(),
+            Tokens::Constant(s) => todo!(),
+            Tokens::Comment(s) => todo!(),
+            Tokens::Sign(s) => match s {
+                Sign::Single(s) => {
+                    let x: char = (*s).into();
+                    x
+                }
+                .to_string(),
+                Sign::Double(_) => todo!(),
+                Sign::Triple(_) => todo!(),
+                Sign::Quadruple(_) => todo!(),
+            },
+            Tokens::Empty => " ".to_string(),
+            Tokens::BreakLine => "\n".to_string(),
+        }
+    }
+}
+
 impl Default for Tokens {
     #[inline]
     fn default() -> Self {
         Self::Empty
+    }
+}
+
+impl From<KeyWords> for Tokens {
+    fn from(v: KeyWords) -> Self {
+        Tokens::KeyWords(v)
     }
 }
 
@@ -427,13 +537,14 @@ pub struct TokenStream<'a> {
     stream: WordStream<'a>,
     tokens: Result<Tokens, TokenError>,
     line: u32,
-    col: [u32; 2],
+    col: u32,
 }
 
 #[derive(Debug)]
 pub enum TokenError {
     ControlCode,
     InvalidUnicode,
+    InvalidIdent,
 }
 
 impl From<WordError> for TokenError {
@@ -457,20 +568,25 @@ impl<'a, 'b: 'a> TokenStream<'a> {
     }
     #[inline]
     fn calc(&mut self, tokens: &mut Result<Tokens, TokenError>) -> (u32, [u32; 2]) {
-        match &self.tokens {
+        let current_length = match &self.tokens {
             Ok(v) => match v {
-                Tokens::Identify(s) => self.col[1] += s.len() as u32,
-                Tokens::KeyWords(key_word) => self.col[1] += key_word.length(),
-                Tokens::Constant(constant) => todo!(),
-                Tokens::Comment(comment) => todo!(),
-                Tokens::Sign(sign) => self.col[1] += sign.length(),
-                Tokens::Empty => self.col[1] += 1,
-                Tokens::BreakLine => self.line += 1,
+                Tokens::Ident(s) => s.len() as u32,
+                Tokens::KeyWords(key_word) => key_word.len(),
+                Tokens::Constant(constant) => constant.len() as u32,
+                Tokens::Comment(comment) => comment.len() as u32,
+                Tokens::Sign(sign) => sign.len(),
+                Tokens::Empty => 1,
+                Tokens::BreakLine => {
+                    self.line += 1;
+                    0
+                }
             },
-            _ => {}
-        }
+            _ => 0,
+        };
+        let col = self.col;
+        self.col += current_length;
         swap(tokens, &mut self.tokens);
-        (self.line, self.col)
+        (self.line, [col, self.col])
     }
 }
 
@@ -490,7 +606,42 @@ impl<'a, 'b: 'a> From<&'b String> for TokenStream<'a> {
 
 impl<'a> Iterator for TokenStream<'a> {
     fn next(self: &mut TokenStream<'a>) -> Option<Self::Item> {
-        while let Some(word) = self.stream.next() {}
+        while let Some(word) = self.stream.next() {
+            let mut value: Result<Tokens, TokenError> = match word {
+                Ok(v) => match v {
+                    Words::Sign(sign) => match {
+                        let s: Result<Single, SignError> = sign.try_into();
+                        s
+                    } {
+                        Ok(s) => {
+                            let s: Sign = s.into();
+                            Ok(Tokens::Sign(match self.tokens {
+                                Ok(Tokens::Sign(x)) => match x + s {
+                                    Some(_) => continue,
+                                    None => s,
+                                },
+                                _ => s,
+                            }))
+                        }
+                        _ => Err(TokenError::InvalidUnicode),
+                    },
+                    Words::Word(word) => {
+                        let key: Result<KeyWords, &str> = word.as_str().try_into();
+                        match key {
+                            Ok(key_words) => Ok(Tokens::KeyWords(key_words)),
+                            Err(_) => {
+                                todo!()
+                            }
+                        }
+                    }
+                    Words::Empty => Ok(Tokens::Empty),
+                    Words::BreakLine => Ok(Tokens::BreakLine),
+                },
+                Err(v) => Err(v.into()),
+            };
+            let (line, col) = self.calc(&mut value);
+            return Some(value.map(|content| Token { content, line, col }));
+        }
         match self.tokens {
             Ok(Tokens::Empty) => None,
             _ => {
@@ -506,7 +657,7 @@ impl<'a> Iterator for TokenStream<'a> {
 
 #[cfg(test)]
 mod token_test {
-    use super::create_ascii_map;
+    use super::{create_ascii_map, TokenStream};
 
     #[test]
     fn test_compile_time() {
@@ -517,6 +668,13 @@ mod token_test {
                 let x: char = v.unwrap().into();
                 assert_eq!(c, x);
             }
+        }
+    }
+    #[test]
+    fn token_stream() {
+        let content = std::fs::read_to_string("src.lq").unwrap();
+        for token in TokenStream::from(&content) {
+            println!("{:?} ", token);
         }
     }
 }
