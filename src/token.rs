@@ -1,5 +1,4 @@
 use std::{
-    cell::RefCell,
     convert::{TryFrom, TryInto},
     mem::swap,
     ops::Add,
@@ -45,7 +44,7 @@ macro_rules! KeyWords {
     };
 }
 
-macro_rules! Convert {
+macro_rules! ConvertToSign {
     ($e: ident) => {
         impl From<$e> for Sign {
             #[inline]
@@ -228,6 +227,9 @@ Double! {
     VerticalBarRightSquareBracket => "|]",
     PeriodPeriod                  => "..",
     SlashSlash                    => "//",
+    ColonGreater                  => ":>",
+    GreaterColon                  => "<:",
+    TildeGreater                  => "~>",
 }
 
 ConstArray!(
@@ -282,38 +284,40 @@ impl Add for Single {
     type Output = Option<Double>;
 
     /*
-    Equal,Equal
-    Equal,Greater
-    Less,Equal
-    Greater,Equal
-    Equal,Less
-    Less,Minus
-    Minus,Greater
-    VerticalBar,Greater
-    Colon,Colon
-    Question,Question
-    Exclamation,Exclamation
-    VerticalBar,VerticalBar
-    Colon,Equal
-    VerticalBar,Equal
-    Greater,Greater
-    Less,Less
-    Exclamation,Equal
-    Less,VerticalBar
-    Period,Question
-    Period,Exclamation
-    Asterisk,Equal
-    Plus,Equal
-    Minus,Equal
-    Divide,Equal
-    Hash,Hash
-    Ampersand,Ampersand
-    Caret,Caret
-    LeftCurlyBracket,VerticalBar
-    VerticalBar,RightCurlyBracket
-    LeftSquareBracket,VerticalBar
-    VerticalBar,RightSquareBracket
-    Period,Period
+        Equal,Equal
+        Equal,Greater
+        Less,Equal
+        Greater,Equal
+        Equal,Less
+        Less,Minus
+        Minus,Greater
+        VerticalBar,Greater
+        Colon,Colon
+        Question,Question
+        Exclamation,Exclamation
+        VerticalBar,VerticalBar
+        Colon,Equal
+        VerticalBar,Equal
+        Greater,Greater
+        Less,Less
+        Exclamation,Equal
+        Less,VerticalBar
+        Period,Question
+        Period,Exclamation
+        Asterisk,Equal
+        Plus,Equal
+        Minus,Equal
+        Divide,Equal
+        Hash,Hash
+        Ampersand,Ampersand
+        Caret,Caret
+        LeftCurlyBracket,VerticalBar
+        VerticalBar,RightCurlyBracket
+        LeftSquareBracket,VerticalBar
+        VerticalBar,RightSquareBracket
+        Period,Period
+        Slash,Slash
+        Tilde,Greater
     */
 
     fn add(self, rhs: Self) -> Self::Output {
@@ -352,6 +356,9 @@ impl Add for Single {
             (Self::VerticalBar, Self::RightSquareBracket) => Some(VerticalBarRightSquareBracket),
             (Self::Period, Self::Period) => Some(PeriodPeriod),
             (Self::Slash, Self::Slash) => Some(SlashSlash),
+            (Self::Colon, Self::Greater) => Some(ColonGreater),
+            (Self::Greater, Self::Colon) => Some(GreaterColon),
+            (Self::Tilde, Self::Greater) => Some(TildeGreater),
             _ => None,
         }
     }
@@ -398,10 +405,10 @@ impl Sign {
     }
 }
 
-Convert!(Single);
-Convert!(Double);
-Convert!(Triple);
-Convert!(Quadruple);
+ConvertToSign!(Single);
+ConvertToSign!(Double);
+ConvertToSign!(Triple);
+ConvertToSign!(Quadruple);
 
 SignAdd! {
     (Sign::Single | Sign::Single),
@@ -475,6 +482,14 @@ pub enum TokenError {
     ControlCode,
     InvalidUnicode,
     InvalidIdent,
+    InvalidCharDefine,
+    InvalidNumberDefine,
+    InvalidStringDefine,
+}
+#[derive(Debug)]
+pub enum State<K, U> {
+    Known(K),
+    Unknown(U),
 }
 
 impl<'a, 'b: 'a> TokenStream<'a> {
@@ -531,58 +546,154 @@ impl<'a, 'b: 'a> From<&'b String> for TokenStream<'a>
     }
 }
 
+impl TryFrom<char> for Sign {
+    type Error = char;
+
+    fn try_from(value: char) -> Result<Self, Self::Error> {
+        // match current {
+        //     '\u{0000}'..='\u{0008}' | '\u{000E}'..='\u{001F}' => Err(TokenError::ControlCode),
+        //     '!' | '#' | '$' | '%' | '&' | '(' | ')' | '*' | '+' | ',' | '-' | '.' | ':'
+        //     | ';' | '<' | '=' | '>' | '?' | '@' | '[' | '\\' | ']' | '^' | '_' | '`' | '{'
+        //     | '|' | '}' | '~' | '/' | '\'' | '"' | ' ' | '\t' | '\r' | '\n' => {
+        //         Ok(Sign(Sign::Single(Single::from(current))))
+        //     }
+        //     _ =>
+        // }
+        let single: Result<Single, SignError> = value.try_into();
+        match single {
+            Ok(v) => Ok(Sign::Single(v)),
+            Err(_) => Err(value),
+        }
+    }
+}
+
+impl TryFrom<char> for Tokens {
+    type Error = TokenError;
+    fn try_from(value: char) -> Result<Self, Self::Error> {
+        match value {
+            '\u{0000}'..='\u{0008}' | '\u{000E}'..='\u{001F}' => Err(TokenError::ControlCode),
+            '0'..='9' => Ok(Tokens::Constant(Constant::Number(String::from(value)))),
+            '!' | '#' | '$' | '%' | '&' | '(' | ')' | '*' | '+' | ',' | '-' | '.' | ':' | ';'
+            | '<' | '=' | '>' | '?' | '@' | '[' | '\\' | ']' | '^' | '_' | '`' | '{' | '|'
+            | '}' | '~' | '/' | '\'' | '"' => {
+                Ok(Tokens::Sign(Single::try_from(value).unwrap().into()))
+            }
+            'F' => Ok(KeyWords::F.into()),
+            'Y' => Ok(KeyWords::Y.into()),
+            ' ' => Ok(Tokens::Empty),
+            '\r' => Ok(Tokens::Empty),
+            '\n' => Ok(Tokens::BreakLine),
+            v => Ok(Tokens::Ident(v.to_string())),
+        }
+    }
+}
+
+unsafe trait IsSign {
+    fn is_sign(&self) -> bool;
+}
+
+unsafe impl IsSign for char {
+    fn is_sign(&self) -> bool {
+        match *self {
+            '!' | '#' | '$' | '%' | '&' | '(' | ')' | '*' | '+' | ',' | '-' | '.' | ':' | ';'
+            | '<' | '=' | '>' | '?' | '@' | '[' | '\\' | ']' | '^' | '_' | '`' | '{' | '|'
+            | '}' | '~' | '/' | '\'' | '"' => true,
+            _ => false,
+        }
+    }
+}
+
 impl<'a> Iterator for TokenStream<'a> {
     fn next(self: &mut Self) -> Option<Self::Item> {
         while let Some(current) = self.stream.next() {
-            let mut value = match &mut self.tokens {
-                Ok(Tokens::Comment(comment)) => match current {
-                    '\r' | '\n' => Ok(Tokens::BreakLine),
-                    v => {
-                        comment.push(v);
-                        continue;
-                    }
-                },
-                Ok(Tokens::Sign(previous)) => match current {
-                    '\u{0000}'..='\u{0008}' | '\u{000E}'..='\u{001F}' => {
-                        Err(TokenError::ControlCode)
-                    }
-                    '!' | '#' | '$' | '%' | '&' | '(' | ')' | '*' | '+' | ',' | '-' | '.' | ':'
-                    | ';' | '<' | '=' | '>' | '?' | '@' | '[' | '\\' | ']' | '^' | '_' | '`'
-                    | '{' | '|' | '}' | '~' => {
-                        todo!()
-                    }
-                    '/' => {
-                        if match *previous {
-                            Sign::Single(Single::Slash) => true,
-                            _ => false,
-                        } {
-                            self.tokens = Ok(Tokens::Comment(String::from("")));
-                            continue;
-                        } else {
-                            Ok(Tokens::Sign(Sign::Single(Single::Slash)))
+            let mut value: Result<Tokens, TokenError> = match &mut self.tokens {
+                Ok(token) => match token {
+                    Tokens::Ident(ident) => {
+                        let key_word: Result<KeyWords, &str> = ident.as_str().try_into();
+                        match key_word {
+                            Ok(v) => {
+                                self.tokens = Ok(v.into());
+                                current.try_into()
+                            }
+                            Err(_) => match current {
+                                '\u{0000}'..='\u{0008}' | '\u{000E}'..='\u{001F}' => {
+                                    Err(TokenError::ControlCode)
+                                }
+                                '!' | '#' | '$' | '%' | '&' | '(' | ')' | '*' | '+' | ',' | '-'
+                                | '.' | ':' | ';' | '<' | '=' | '>' | '?' | '@' | '[' | '\\'
+                                | ']' | '^' | '_' | '`' | '{' | '|' | '}' | '~' | '/' | '\''
+                                | '"' => {
+                                    Ok(Tokens::Sign(Single::try_from(current).unwrap().into()))
+                                }
+                                'F' => Ok(KeyWords::F.into()),
+                                'Y' => Ok(KeyWords::Y.into()),
+                                ' ' => Ok(Tokens::Empty),
+                                '\n' => Ok(Tokens::BreakLine),
+                                '\r' => continue,
+                                _ => {
+                                    ident.push(current);
+                                    continue;
+                                }
+                            },
                         }
                     }
-                    '\'' | '"' => {
-                        todo!()
+                    Tokens::KeyWords(_) => current.try_into(),
+                    Tokens::Constant(constant) => match constant {
+                        Constant::String(s) => match current {
+                            '"' => {
+                                if s.ends_with('\\') {
+                                    Ok(Tokens::Empty)
+                                } else {
+                                    continue;
+                                }
+                            }
+                            _ => {
+                                s.push(current);
+                                continue;
+                            }
+                        },
+                        Constant::Number(s) => match current {
+                            '0'..='9' => {
+                                s.push(current);
+                                continue;
+                            }
+                            '_' => continue,
+                            _ => current.try_into(),
+                        },
+                        _ => current.try_into(),
+                    },
+                    Tokens::Comment(s) => {
+                        if current == '\n' {
+                            Ok(Tokens::BreakLine)
+                        } else if current == '\r' {
+                            continue;
+                        } else {
+                            s.push(current);
+                            continue;
+                        }
                     }
-                    ' ' | '\t' => {
-                        todo!()
-                    }
-                    '\r' | '\n' => {
-                        todo!()
-                    }
-                    '0'..='9' => {
-                        todo!()
-                    }
-                    _ => {
-                        todo!()
-                    }
+                    Tokens::Sign(sign) => match sign {
+                        Sign::Double(Double::SlashSlash) => {
+                            self.tokens = Ok(Tokens::Comment(String::new()));
+                            continue;
+                        }
+                        v => {
+                            let s: Result<Tokens, TokenError> = current.try_into();
+                            match s {
+                                Ok(Tokens::Sign(sign)) => match sign + *v {
+                                    Some(real) => {
+                                        *v = real;
+                                        continue;
+                                    }
+                                    None => s,
+                                },
+                                v => v,
+                            }
+                        }
+                    },
+                    _ => current.try_into(),
                 },
-                Ok(Tokens::Constant(s)) => todo!(),
-                Ok(Tokens::Ident(s)) => todo!(),
-                Ok(Tokens::KeyWords(s)) => todo!(),
-                Ok(_) => todo!(),
-                Err(_) => todo!(),
+                Err(_) => current.try_into(),
             };
             let (line, col) = self.calc(&mut value);
             return Some(value.map(|content| Token { content, line, col }));
@@ -605,8 +716,8 @@ mod token_test {
     use super::{single_map, TokenStream};
     #[test]
     fn test_comment_token() {
-        for i in TokenStream::from("// I am the one") {
-            println!("{:?}", i);
+        for i in TokenStream::from(&std::fs::read_to_string("src.lq").unwrap()) {
+            println!("{:?}", i.unwrap().content);
         }
     }
     #[test]

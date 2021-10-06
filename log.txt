@@ -5,467 +5,448 @@ test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
 
 
 running 1 test
-Ok(Token { content: Empty, line: 0, col: [0, 1] }) 
-Ok(Token { content: Empty, line: 0, col: [0, 2] }) 
-Ok(Token { content: Ident("use"), line: 0, col: [0, 5] }) 
-Ok(Token { content: Empty, line: 0, col: [0, 6] }) 
-Ok(Token { content: Ident("std"), line: 0, col: [0, 9] }) 
-Ok(Token { content: Sign(Single(Colon)), line: 0, col: [0, 10] }) 
-Ok(Token { content: Ident("ffi"), line: 0, col: [0, 13] }) 
-Ok(Token { content: Sign(Single(Colon)), line: 0, col: [0, 14] }) 
-Ok(Token { content: Ident("os"), line: 0, col: [0, 16] }) 
-Ok(Token { content: Sign(Single(Colon)), line: 0, col: [0, 17] }) 
-Ok(Token { content: Ident("linux"), line: 0, col: [0, 22] }) 
-Ok(Token { content: Sign(Single(Colon)), line: 0, col: [0, 23] }) 
-Ok(Token { content: Ident("write"), line: 0, col: [0, 28] }) 
-Ok(Token { content: Sign(Single(Semicolon)), line: 0, col: [0, 29] }) 
-Ok(Token { content: BreakLine, line: 1, col: [0, 29] }) 
-Ok(Token { content: BreakLine, line: 2, col: [0, 29] }) 
-Ok(Token { content: KeyWords(F), line: 2, col: [0, 30] }) 
-Ok(Token { content: Sign(Single(LeftSquareBracket)), line: 2, col: [0, 31] }) 
-Ok(Token { content: Ident("i32"), line: 2, col: [0, 34] }) 
-Ok(Token { content: Sign(Single(RightSquareBracket)), line: 2, col: [0, 35] }) 
-Ok(Token { content: Empty, line: 2, col: [0, 36] }) 
-Ok(Token { content: Sign(Single(Tilde)), line: 2, col: [0, 37] }) 
-Ok(Token { content: Sign(Single(Greater)), line: 2, col: [0, 38] }) 
-Ok(Token { content: Empty, line: 2, col: [0, 39] }) 
-Ok(Token { content: Ident("unit"), line: 2, col: [0, 43] }) 
-Ok(Token { content: Empty, line: 2, col: [0, 44] }) 
-Ok(Token { content: Ident("print"), line: 2, col: [0, 49] }) 
-Ok(Token { content: Empty, line: 2, col: [0, 50] }) 
-Ok(Token { content: Ident("v"), line: 2, col: [0, 51] }) 
-Ok(Token { content: Empty, line: 2, col: [0, 52] }) 
-Ok(Token { content: Sign(Single(Equal)), line: 2, col: [0, 53] }) 
-Ok(Token { content: Empty, line: 2, col: [0, 54] }) 
-Ok(Token { content: Sign(Single(LeftCurlyBracket)), line: 2, col: [0, 55] }) 
-Ok(Token { content: BreakLine, line: 3, col: [0, 55] }) 
-Ok(Token { content: Empty, line: 3, col: [0, 56] }) 
-Ok(Token { content: Empty, line: 3, col: [0, 57] }) 
-Ok(Token { content: Empty, line: 3, col: [0, 58] }) 
-Ok(Token { content: Empty, line: 3, col: [0, 59] }) 
-Ok(Token { content: Ident("write"), line: 3, col: [0, 64] }) 
-Ok(Token { content: Sign(Single(LeftParenthesis)), line: 3, col: [0, 65] }) 
-Ok(Token { content: Sign(Single(Ampersand)), line: 3, col: [0, 66] }) 
-Ok(Token { content: Ident("v"), line: 3, col: [0, 67] }) 
-Ok(Token { content: Empty, line: 3, col: [0, 68] }) 
-Ok(Token { content: Ident("cast"), line: 3, col: [0, 72] }) 
-Ok(Token { content: Empty, line: 3, col: [0, 73] }) 
-Ok(Token { content: Sign(Single(Asterisk)), line: 3, col: [0, 74] }) 
-Ok(Token { content: Empty, line: 3, col: [0, 75] }) 
-Ok(Token { content: Ident("i32"), line: 3, col: [0, 78] }) 
-Ok(Token { content: Sign(Single(RightParenthesis)), line: 3, col: [0, 79] }) 
-Ok(Token { content: Sign(Single(Semicolon)), line: 3, col: [0, 80] }) 
-Ok(Token { content: BreakLine, line: 4, col: [0, 80] }) 
-Ok(Token { content: Sign(Single(RightCurlyBracket)), line: 4, col: [0, 81] }) 
-Ok(Token { content: BreakLine, line: 5, col: [0, 81] }) 
-Ok(Token { content: BreakLine, line: 6, col: [0, 81] }) 
-Ok(Token { content: Ident("struct"), line: 6, col: [0, 87] }) 
-Ok(Token { content: Empty, line: 6, col: [0, 88] }) 
-Ok(Token { content: Sign(Single(LeftSquareBracket)), line: 6, col: [0, 89] }) 
-Ok(Token { content: Ident("T"), line: 6, col: [0, 90] }) 
-Ok(Token { content: Empty, line: 6, col: [0, 91] }) 
-Ok(Token { content: Sign(Single(Colon)), line: 6, col: [0, 92] }) 
-Ok(Token { content: Sign(Single(Less)), line: 6, col: [0, 93] }) 
-Ok(Token { content: Empty, line: 6, col: [0, 94] }) 
-Ok(Token { content: KeyWords(Y), line: 6, col: [0, 95] }) 
-Ok(Token { content: Sign(Single(RightSquareBracket)), line: 6, col: [0, 96] }) 
-Ok(Token { content: Empty, line: 6, col: [0, 97] }) 
-Ok(Token { content: Ident("Test"), line: 6, col: [0, 101] }) 
-Ok(Token { content: Empty, line: 6, col: [0, 102] }) 
-Ok(Token { content: Sign(Single(LeftCurlyBracket)), line: 6, col: [0, 103] }) 
-Ok(Token { content: BreakLine, line: 7, col: [0, 103] }) 
-Ok(Token { content: Empty, line: 7, col: [0, 104] }) 
-Ok(Token { content: Empty, line: 7, col: [0, 105] }) 
-Ok(Token { content: Empty, line: 7, col: [0, 106] }) 
-Ok(Token { content: Empty, line: 7, col: [0, 107] }) 
-Ok(Token { content: Ident("value"), line: 7, col: [0, 112] }) 
-Ok(Token { content: Sign(Single(Colon)), line: 7, col: [0, 113] }) 
-Ok(Token { content: Empty, line: 7, col: [0, 114] }) 
-Ok(Token { content: Ident("T"), line: 7, col: [0, 115] }) 
-Ok(Token { content: BreakLine, line: 8, col: [0, 115] }) 
-Ok(Token { content: Sign(Single(RightCurlyBracket)), line: 8, col: [0, 116] }) 
-Ok(Token { content: BreakLine, line: 9, col: [0, 116] }) 
-Ok(Token { content: BreakLine, line: 10, col: [0, 116] }) 
-Ok(Token { content: KeyWords(F), line: 10, col: [0, 117] }) 
-Ok(Token { content: Sign(Single(LeftSquareBracket)), line: 10, col: [0, 118] }) 
-Ok(Token { content: Ident("unit"), line: 10, col: [0, 122] }) 
-Ok(Token { content: Sign(Single(RightSquareBracket)), line: 10, col: [0, 123] }) 
-Ok(Token { content: Empty, line: 10, col: [0, 124] }) 
-Ok(Token { content: Sign(Single(Tilde)), line: 10, col: [0, 125] }) 
-Ok(Token { content: Sign(Single(Greater)), line: 10, col: [0, 126] }) 
-Ok(Token { content: Empty, line: 10, col: [0, 127] }) 
-Ok(Token { content: Ident("i32"), line: 10, col: [0, 130] }) 
-Ok(Token { content: Empty, line: 10, col: [0, 131] }) 
-Ok(Token { content: Ident("main"), line: 10, col: [0, 135] }) 
-Ok(Token { content: Empty, line: 10, col: [0, 136] }) 
-Ok(Token { content: Sign(Single(Equal)), line: 10, col: [0, 137] }) 
-Ok(Token { content: Empty, line: 10, col: [0, 138] }) 
-Ok(Token { content: Sign(Single(LeftCurlyBracket)), line: 10, col: [0, 139] }) 
-Ok(Token { content: BreakLine, line: 11, col: [0, 139] }) 
-Ok(Token { content: Empty, line: 11, col: [0, 140] }) 
-Ok(Token { content: Empty, line: 11, col: [0, 141] }) 
-Ok(Token { content: Empty, line: 11, col: [0, 142] }) 
-Ok(Token { content: Empty, line: 11, col: [0, 143] }) 
-Ok(Token { content: Ident("let"), line: 11, col: [0, 146] }) 
-Ok(Token { content: Empty, line: 11, col: [0, 147] }) 
-Ok(Token { content: Ident("value"), line: 11, col: [0, 152] }) 
-Ok(Token { content: Sign(Single(Colon)), line: 11, col: [0, 153] }) 
-Ok(Token { content: Empty, line: 11, col: [0, 154] }) 
-Ok(Token { content: KeyWords(Y), line: 11, col: [0, 155] }) 
-Ok(Token { content: Sign(Single(LeftSquareBracket)), line: 11, col: [0, 156] }) 
-Ok(Token { content: Ident("i32"), line: 11, col: [0, 159] }) 
-Ok(Token { content: Sign(Single(Comma)), line: 11, col: [0, 160] }) 
-Ok(Token { content: Empty, line: 11, col: [0, 161] }) 
-Ok(Token { content: Ident("u32"), line: 11, col: [0, 164] }) 
-Ok(Token { content: Sign(Single(RightSquareBracket)), line: 11, col: [0, 165] }) 
-Ok(Token { content: Empty, line: 11, col: [0, 166] }) 
-Ok(Token { content: Sign(Single(Equal)), line: 11, col: [0, 167] }) 
-Ok(Token { content: Empty, line: 11, col: [0, 168] }) 
-Ok(Token { content: Ident("v"), line: 11, col: [0, 169] }) 
-Ok(Token { content: Empty, line: 11, col: [0, 170] }) 
-Ok(Token { content: Sign(Single(LeftCurlyBracket)), line: 11, col: [0, 171] }) 
-Ok(Token { content: Empty, line: 11, col: [0, 172] }) 
-Ok(Token { content: Ident("v"), line: 11, col: [0, 173] }) 
-Ok(Token { content: Empty, line: 11, col: [0, 174] }) 
-Ok(Token { content: Ident("as"), line: 11, col: [0, 176] }) 
-Ok(Token { content: Empty, line: 11, col: [0, 177] }) 
-Ok(Token { content: Ident("u32"), line: 11, col: [0, 180] }) 
-Ok(Token { content: Empty, line: 11, col: [0, 181] }) 
-Ok(Token { content: Sign(Single(RightCurlyBracket)), line: 11, col: [0, 182] }) 
-Ok(Token { content: Sign(Single(Semicolon)), line: 11, col: [0, 183] }) 
-Ok(Token { content: Empty, line: 11, col: [0, 184] }) 
-Ok(Token { content: Sign(Single(Slash)), line: 11, col: [0, 185] }) 
-Ok(Token { content: Empty, line: 11, col: [0, 186] }) 
-Ok(Token { content: Ident("Closure"), line: 11, col: [0, 193] }) 
-Ok(Token { content: BreakLine, line: 12, col: [0, 193] }) 
-Ok(Token { content: Empty, line: 12, col: [0, 194] }) 
-Ok(Token { content: Empty, line: 12, col: [0, 195] }) 
-Ok(Token { content: Empty, line: 12, col: [0, 196] }) 
-Ok(Token { content: Empty, line: 12, col: [0, 197] }) 
-Ok(Token { content: Ident("let"), line: 12, col: [0, 200] }) 
-Ok(Token { content: Empty, line: 12, col: [0, 201] }) 
-Ok(Token { content: Ident("x"), line: 12, col: [0, 202] }) 
-Ok(Token { content: Empty, line: 12, col: [0, 203] }) 
-Ok(Token { content: Sign(Single(Equal)), line: 12, col: [0, 204] }) 
-Ok(Token { content: Empty, line: 12, col: [0, 205] }) 
-Ok(Token { content: Sign(Single(Hash)), line: 12, col: [0, 206] }) 
-Ok(Token { content: Sign(Single(LeftSquareBracket)), line: 12, col: [0, 207] }) 
-Err(InvalidIdent) 
-Ok(Token { content: Sign(Single(Comma)), line: 12, col: [0, 208] }) 
-Ok(Token { content: Empty, line: 12, col: [0, 209] }) 
-Err(InvalidIdent) 
-Ok(Token { content: Sign(Single(Comma)), line: 12, col: [0, 210] }) 
-Ok(Token { content: Empty, line: 12, col: [0, 211] }) 
-Err(InvalidIdent) 
-Ok(Token { content: Sign(Single(RightSquareBracket)), line: 12, col: [0, 212] }) 
-Ok(Token { content: Sign(Single(Semicolon)), line: 12, col: [0, 213] }) 
-Ok(Token { content: Empty, line: 12, col: [0, 214] }) 
-Ok(Token { content: Sign(Single(Slash)), line: 12, col: [0, 215] }) 
-Ok(Token { content: Empty, line: 12, col: [0, 216] }) 
-Ok(Token { content: Ident("list"), line: 12, col: [0, 220] }) 
-Ok(Token { content: Empty, line: 12, col: [0, 221] }) 
-Ok(Token { content: Ident("Constant"), line: 12, col: [0, 229] }) 
-Ok(Token { content: BreakLine, line: 13, col: [0, 229] }) 
-Ok(Token { content: Empty, line: 13, col: [0, 230] }) 
-Ok(Token { content: Empty, line: 13, col: [0, 231] }) 
-Ok(Token { content: Empty, line: 13, col: [0, 232] }) 
-Ok(Token { content: Empty, line: 13, col: [0, 233] }) 
-Ok(Token { content: Ident("let"), line: 13, col: [0, 236] }) 
-Ok(Token { content: Empty, line: 13, col: [0, 237] }) 
-Ok(Token { content: Ident("v"), line: 13, col: [0, 238] }) 
-Ok(Token { content: Empty, line: 13, col: [0, 239] }) 
-Ok(Token { content: Sign(Single(Equal)), line: 13, col: [0, 240] }) 
-Ok(Token { content: Empty, line: 13, col: [0, 241] }) 
-Ok(Token { content: Sign(Single(Hash)), line: 13, col: [0, 242] }) 
-Ok(Token { content: Sign(Single(LeftSquareBracket)), line: 13, col: [0, 243] }) 
-Ok(Token { content: Empty, line: 13, col: [0, 244] }) 
-Ok(Token { content: Sign(Single(VerticalBar)), line: 13, col: [0, 245] }) 
-Ok(Token { content: Sign(Single(Semicolon)), line: 13, col: [0, 246] }) 
-Ok(Token { content: Empty, line: 13, col: [0, 247] }) 
-Ok(Token { content: Sign(Single(Slash)), line: 13, col: [0, 248] }) 
-Ok(Token { content: Empty, line: 13, col: [0, 249] }) 
-Ok(Token { content: Ident("Array"), line: 13, col: [0, 254] }) 
-Ok(Token { content: Empty, line: 13, col: [0, 255] }) 
-Ok(Token { content: Ident("Constant"), line: 13, col: [0, 263] }) 
-Ok(Token { content: BreakLine, line: 14, col: [0, 263] }) 
-Ok(Token { content: Empty, line: 14, col: [0, 264] }) 
-Ok(Token { content: Empty, line: 14, col: [0, 265] }) 
-Ok(Token { content: Empty, line: 14, col: [0, 266] }) 
-Ok(Token { content: Empty, line: 14, col: [0, 267] }) 
-Ok(Token { content: Ident("let"), line: 14, col: [0, 270] }) 
-Ok(Token { content: Empty, line: 14, col: [0, 271] }) 
-Ok(Token { content: Ident("x"), line: 14, col: [0, 272] }) 
-Ok(Token { content: Empty, line: 14, col: [0, 273] }) 
-Ok(Token { content: Sign(Single(Equal)), line: 14, col: [0, 274] }) 
-Ok(Token { content: Empty, line: 14, col: [0, 275] }) 
-Ok(Token { content: Sign(Single(Hash)), line: 14, col: [0, 276] }) 
-Ok(Token { content: Sign(Single(LeftParenthesis)), line: 14, col: [0, 277] }) 
-Err(InvalidIdent) 
-Ok(Token { content: Sign(Single(Comma)), line: 14, col: [0, 278] }) 
-Ok(Token { content: Empty, line: 14, col: [0, 279] }) 
-Ok(Token { content: Sign(Single(Quotation)), line: 14, col: [0, 280] }) 
-Err(InvalidIdent) 
-Ok(Token { content: Sign(Single(Quotation)), line: 14, col: [0, 281] }) 
-Ok(Token { content: Sign(Single(Comma)), line: 14, col: [0, 282] }) 
-Ok(Token { content: Empty, line: 14, col: [0, 283] }) 
-Ok(Token { content: Sign(Single(Hash)), line: 14, col: [0, 284] }) 
-Ok(Token { content: Sign(Single(LeftParenthesis)), line: 14, col: [0, 285] }) 
-Ok(Token { content: Ident("Some"), line: 14, col: [0, 289] }) 
-Ok(Token { content: Sign(Single(LeftParenthesis)), line: 14, col: [0, 290] }) 
-Err(InvalidIdent) 
-Ok(Token { content: Sign(Single(RightParenthesis)), line: 14, col: [0, 291] }) 
-Ok(Token { content: Sign(Single(RightParenthesis)), line: 14, col: [0, 292] }) 
-Ok(Token { content: Sign(Single(Semicolon)), line: 14, col: [0, 293] }) 
-Ok(Token { content: Empty, line: 14, col: [0, 294] }) 
-Ok(Token { content: Sign(Single(Slash)), line: 14, col: [0, 295] }) 
-Ok(Token { content: Empty, line: 14, col: [0, 296] }) 
-Ok(Token { content: Ident("Tuple"), line: 14, col: [0, 301] }) 
-Ok(Token { content: Empty, line: 14, col: [0, 302] }) 
-Ok(Token { content: Ident("Constant"), line: 14, col: [0, 310] }) 
-Ok(Token { content: BreakLine, line: 15, col: [0, 310] }) 
-Ok(Token { content: Empty, line: 15, col: [0, 311] }) 
-Ok(Token { content: Empty, line: 15, col: [0, 312] }) 
-Ok(Token { content: Empty, line: 15, col: [0, 313] }) 
-Ok(Token { content: Empty, line: 15, col: [0, 314] }) 
-Ok(Token { content: Ident("let"), line: 15, col: [0, 317] }) 
-Ok(Token { content: Empty, line: 15, col: [0, 318] }) 
-Ok(Token { content: Ident("x"), line: 15, col: [0, 319] }) 
-Ok(Token { content: Empty, line: 15, col: [0, 320] }) 
-Ok(Token { content: Sign(Single(Equal)), line: 15, col: [0, 321] }) 
-Ok(Token { content: Empty, line: 15, col: [0, 322] }) 
-Ok(Token { content: Sign(Single(Less)), line: 15, col: [0, 323] }) 
-Ok(Token { content: Empty, line: 15, col: [0, 324] }) 
-Ok(Token { content: Ident("x"), line: 15, col: [0, 325] }) 
-Ok(Token { content: Empty, line: 15, col: [0, 326] }) 
-Ok(Token { content: Sign(Single(Minus)), line: 15, col: [0, 327] }) 
-Ok(Token { content: Empty, line: 15, col: [0, 328] }) 
-Ok(Token { content: Ident("box"), line: 15, col: [0, 331] }) 
-Ok(Token { content: Empty, line: 15, col: [0, 332] }) 
-Err(InvalidIdent) 
-Ok(Token { content: Sign(Single(Comma)), line: 15, col: [0, 333] }) 
-Ok(Token { content: Empty, line: 15, col: [0, 334] }) 
-Ok(Token { content: Ident("y"), line: 15, col: [0, 335] }) 
-Ok(Token { content: Empty, line: 15, col: [0, 336] }) 
-Ok(Token { content: Sign(Single(Minus)), line: 15, col: [0, 337] }) 
-Ok(Token { content: Empty, line: 15, col: [0, 338] }) 
-Err(InvalidIdent) 
-Ok(Token { content: Empty, line: 15, col: [0, 339] }) 
-Ok(Token { content: Sign(Single(VerticalBar)), line: 15, col: [0, 340] }) 
-Ok(Token { content: Sign(Single(Semicolon)), line: 15, col: [0, 341] }) 
-Ok(Token { content: Empty, line: 15, col: [0, 342] }) 
-Ok(Token { content: Sign(Single(Slash)), line: 15, col: [0, 343] }) 
-Ok(Token { content: Empty, line: 15, col: [0, 344] }) 
-Ok(Token { content: Ident("Map"), line: 15, col: [0, 347] }) 
-Ok(Token { content: BreakLine, line: 16, col: [0, 347] }) 
-Ok(Token { content: Empty, line: 16, col: [0, 348] }) 
-Ok(Token { content: Empty, line: 16, col: [0, 349] }) 
-Ok(Token { content: Empty, line: 16, col: [0, 350] }) 
-Ok(Token { content: Empty, line: 16, col: [0, 351] }) 
-Ok(Token { content: Ident("let"), line: 16, col: [0, 354] }) 
-Ok(Token { content: Empty, line: 16, col: [0, 355] }) 
-Ok(Token { content: Ident("x"), line: 16, col: [0, 356] }) 
-Ok(Token { content: Empty, line: 16, col: [0, 357] }) 
-Ok(Token { content: Sign(Single(Colon)), line: 16, col: [0, 358] }) 
-Ok(Token { content: Empty, line: 16, col: [0, 359] }) 
-Ok(Token { content: Ident("Test"), line: 16, col: [0, 363] }) 
-Ok(Token { content: Empty, line: 16, col: [0, 364] }) 
-Ok(Token { content: Sign(Single(Equal)), line: 16, col: [0, 365] }) 
-Ok(Token { content: Empty, line: 16, col: [0, 366] }) 
-Ok(Token { content: Ident("box"), line: 16, col: [0, 369] }) 
-Ok(Token { content: Empty, line: 16, col: [0, 370] }) 
-Ok(Token { content: Ident("Test"), line: 16, col: [0, 374] }) 
-Ok(Token { content: Empty, line: 16, col: [0, 375] }) 
-Ok(Token { content: Sign(Single(Hash)), line: 16, col: [0, 376] }) 
-Ok(Token { content: Sign(Single(LeftCurlyBracket)), line: 16, col: [0, 377] }) 
-Ok(Token { content: Empty, line: 16, col: [0, 378] }) 
-Ok(Token { content: Ident("value"), line: 16, col: [0, 383] }) 
-Ok(Token { content: Empty, line: 16, col: [0, 384] }) 
-Ok(Token { content: Sign(Single(RightCurlyBracket)), line: 16, col: [0, 385] }) 
-Ok(Token { content: Sign(Single(Semicolon)), line: 16, col: [0, 386] }) 
-Ok(Token { content: Empty, line: 16, col: [0, 387] }) 
-Ok(Token { content: Sign(Single(Slash)), line: 16, col: [0, 388] }) 
-Ok(Token { content: Empty, line: 16, col: [0, 389] }) 
-Ok(Token { content: Ident("Test"), line: 16, col: [0, 393] }) 
-Ok(Token { content: Empty, line: 16, col: [0, 394] }) 
-Ok(Token { content: Ident("heap"), line: 16, col: [0, 398] }) 
-Ok(Token { content: BreakLine, line: 17, col: [0, 398] }) 
-Ok(Token { content: Empty, line: 17, col: [0, 399] }) 
-Ok(Token { content: Empty, line: 17, col: [0, 400] }) 
-Ok(Token { content: Empty, line: 17, col: [0, 401] }) 
-Ok(Token { content: Empty, line: 17, col: [0, 402] }) 
-Ok(Token { content: Ident("let"), line: 17, col: [0, 405] }) 
-Ok(Token { content: Empty, line: 17, col: [0, 406] }) 
-Ok(Token { content: Ident("c"), line: 17, col: [0, 407] }) 
-Ok(Token { content: Empty, line: 17, col: [0, 408] }) 
-Ok(Token { content: Sign(Single(Equal)), line: 17, col: [0, 409] }) 
-Ok(Token { content: Empty, line: 17, col: [0, 410] }) 
-Ok(Token { content: Sign(Single(Apostrophe)), line: 17, col: [0, 411] }) 
-Ok(Token { content: Sign(Single(BackSlash)), line: 17, col: [0, 412] }) 
-Ok(Token { content: Ident("u"), line: 17, col: [0, 413] }) 
-Ok(Token { content: Sign(Single(LeftCurlyBracket)), line: 17, col: [0, 414] }) 
-Err(InvalidIdent) 
-Ok(Token { content: Sign(Single(RightCurlyBracket)), line: 17, col: [0, 415] }) 
-Ok(Token { content: Sign(Single(Apostrophe)), line: 17, col: [0, 416] }) 
-Ok(Token { content: Sign(Single(Semicolon)), line: 17, col: [0, 417] }) 
-Ok(Token { content: Empty, line: 17, col: [0, 418] }) 
-Ok(Token { content: Sign(Single(Slash)), line: 17, col: [0, 419] }) 
-Ok(Token { content: Empty, line: 17, col: [0, 420] }) 
-Ok(Token { content: Ident("char"), line: 17, col: [0, 424] }) 
-Ok(Token { content: BreakLine, line: 18, col: [0, 424] }) 
-Ok(Token { content: Empty, line: 18, col: [0, 425] }) 
-Ok(Token { content: Empty, line: 18, col: [0, 426] }) 
-Ok(Token { content: Empty, line: 18, col: [0, 427] }) 
-Ok(Token { content: Empty, line: 18, col: [0, 428] }) 
-Ok(Token { content: Ident("let"), line: 18, col: [0, 431] }) 
-Ok(Token { content: Empty, line: 18, col: [0, 432] }) 
-Ok(Token { content: Ident("s"), line: 18, col: [0, 433] }) 
-Ok(Token { content: Empty, line: 18, col: [0, 434] }) 
-Ok(Token { content: Sign(Single(Equal)), line: 18, col: [0, 435] }) 
-Ok(Token { content: Empty, line: 18, col: [0, 436] }) 
-Ok(Token { content: Sign(Single(Quotation)), line: 18, col: [0, 437] }) 
-Ok(Token { content: Sign(Single(BackSlash)), line: 18, col: [0, 438] }) 
-Ok(Token { content: Ident("u"), line: 18, col: [0, 439] }) 
-Ok(Token { content: Sign(Single(LeftCurlyBracket)), line: 18, col: [0, 440] }) 
-Err(InvalidIdent) 
-Ok(Token { content: Sign(Single(RightCurlyBracket)), line: 18, col: [0, 441] }) 
-Ok(Token { content: Sign(Single(BackSlash)), line: 18, col: [0, 442] }) 
-Ok(Token { content: Ident("u"), line: 18, col: [0, 443] }) 
-Ok(Token { content: Sign(Single(LeftCurlyBracket)), line: 18, col: [0, 444] }) 
-Err(InvalidIdent) 
-Ok(Token { content: Sign(Single(RightCurlyBracket)), line: 18, col: [0, 445] }) 
-Ok(Token { content: Sign(Single(BackSlash)), line: 18, col: [0, 446] }) 
-Ok(Token { content: Ident("u"), line: 18, col: [0, 447] }) 
-Ok(Token { content: Sign(Single(LeftCurlyBracket)), line: 18, col: [0, 448] }) 
-Err(InvalidIdent) 
-Ok(Token { content: Sign(Single(RightCurlyBracket)), line: 18, col: [0, 449] }) 
-Ok(Token { content: Sign(Single(Quotation)), line: 18, col: [0, 450] }) 
-Ok(Token { content: Sign(Single(Semicolon)), line: 18, col: [0, 451] }) 
-Ok(Token { content: Empty, line: 18, col: [0, 452] }) 
-Ok(Token { content: Sign(Single(Slash)), line: 18, col: [0, 453] }) 
-Ok(Token { content: Empty, line: 18, col: [0, 454] }) 
-Ok(Token { content: Sign(Single(Ampersand)), line: 18, col: [0, 455] }) 
-Ok(Token { content: Ident("string"), line: 18, col: [0, 461] }) 
-Ok(Token { content: BreakLine, line: 19, col: [0, 461] }) 
-Ok(Token { content: Empty, line: 19, col: [0, 462] }) 
-Ok(Token { content: Empty, line: 19, col: [0, 463] }) 
-Ok(Token { content: Empty, line: 19, col: [0, 464] }) 
-Ok(Token { content: Empty, line: 19, col: [0, 465] }) 
-Ok(Token { content: Ident("let"), line: 19, col: [0, 468] }) 
-Ok(Token { content: Empty, line: 19, col: [0, 469] }) 
-Ok(Token { content: Ident("y"), line: 19, col: [0, 470] }) 
-Ok(Token { content: Sign(Single(Colon)), line: 19, col: [0, 471] }) 
-Ok(Token { content: Empty, line: 19, col: [0, 472] }) 
-Ok(Token { content: Ident("async"), line: 19, col: [0, 477] }) 
-Ok(Token { content: Empty, line: 19, col: [0, 478] }) 
-Ok(Token { content: Ident("block"), line: 19, col: [0, 483] }) 
-Ok(Token { content: Empty, line: 19, col: [0, 484] }) 
-Ok(Token { content: Ident("bool"), line: 19, col: [0, 488] }) 
-Ok(Token { content: Empty, line: 19, col: [0, 489] }) 
-Ok(Token { content: Sign(Single(Equal)), line: 19, col: [0, 490] }) 
-Ok(Token { content: Empty, line: 19, col: [0, 491] }) 
-Ok(Token { content: Ident("async"), line: 19, col: [0, 496] }) 
-Ok(Token { content: Empty, line: 19, col: [0, 497] }) 
-Ok(Token { content: Sign(Single(LeftCurlyBracket)), line: 19, col: [0, 498] }) 
-Ok(Token { content: BreakLine, line: 20, col: [0, 498] }) 
-Ok(Token { content: Empty, line: 20, col: [0, 499] }) 
-Ok(Token { content: Empty, line: 20, col: [0, 500] }) 
-Ok(Token { content: Empty, line: 20, col: [0, 501] }) 
-Ok(Token { content: Empty, line: 20, col: [0, 502] }) 
-Ok(Token { content: Empty, line: 20, col: [0, 503] }) 
-Ok(Token { content: Empty, line: 20, col: [0, 504] }) 
-Ok(Token { content: Empty, line: 20, col: [0, 505] }) 
-Ok(Token { content: Empty, line: 20, col: [0, 506] }) 
-Ok(Token { content: Ident("false"), line: 20, col: [0, 511] }) 
-Ok(Token { content: BreakLine, line: 21, col: [0, 511] }) 
-Ok(Token { content: Empty, line: 21, col: [0, 512] }) 
-Ok(Token { content: Empty, line: 21, col: [0, 513] }) 
-Ok(Token { content: Empty, line: 21, col: [0, 514] }) 
-Ok(Token { content: Empty, line: 21, col: [0, 515] }) 
-Ok(Token { content: Sign(Single(RightCurlyBracket)), line: 21, col: [0, 516] }) 
-Ok(Token { content: BreakLine, line: 22, col: [0, 516] }) 
-Ok(Token { content: Empty, line: 22, col: [0, 517] }) 
-Ok(Token { content: Empty, line: 22, col: [0, 518] }) 
-Ok(Token { content: Empty, line: 22, col: [0, 519] }) 
-Ok(Token { content: Empty, line: 22, col: [0, 520] }) 
-Ok(Token { content: Ident("let"), line: 22, col: [0, 523] }) 
-Ok(Token { content: Empty, line: 22, col: [0, 524] }) 
-Ok(Token { content: Ident("x"), line: 22, col: [0, 525] }) 
-Ok(Token { content: Empty, line: 22, col: [0, 526] }) 
-Ok(Token { content: Sign(Single(Colon)), line: 22, col: [0, 527] }) 
-Ok(Token { content: Empty, line: 22, col: [0, 528] }) 
-Ok(Token { content: Ident("bool"), line: 22, col: [0, 532] }) 
-Ok(Token { content: Empty, line: 22, col: [0, 533] }) 
-Ok(Token { content: Sign(Single(Equal)), line: 22, col: [0, 534] }) 
-Ok(Token { content: Empty, line: 22, col: [0, 535] }) 
-Err(InvalidIdent) 
-Ok(Token { content: Empty, line: 22, col: [0, 536] }) 
-Ok(Token { content: Sign(Single(Greater)), line: 22, col: [0, 537] }) 
-Ok(Token { content: Empty, line: 22, col: [0, 538] }) 
-Err(InvalidIdent) 
-Ok(Token { content: Sign(Single(Semicolon)), line: 22, col: [0, 539] }) 
-Ok(Token { content: BreakLine, line: 23, col: [0, 539] }) 
-Ok(Token { content: Empty, line: 23, col: [0, 540] }) 
-Ok(Token { content: Empty, line: 23, col: [0, 541] }) 
-Ok(Token { content: Empty, line: 23, col: [0, 542] }) 
-Ok(Token { content: Empty, line: 23, col: [0, 543] }) 
-Ok(Token { content: Ident("for"), line: 23, col: [0, 546] }) 
-Ok(Token { content: Empty, line: 23, col: [0, 547] }) 
-Ok(Token { content: Ident("i"), line: 23, col: [0, 548] }) 
-Ok(Token { content: Empty, line: 23, col: [0, 549] }) 
-Ok(Token { content: Ident("in"), line: 23, col: [0, 551] }) 
-Ok(Token { content: Empty, line: 23, col: [0, 552] }) 
-Err(InvalidIdent) 
-Ok(Token { content: Empty, line: 23, col: [0, 553] }) 
-Ok(Token { content: Ident("to"), line: 23, col: [0, 555] }) 
-Ok(Token { content: Empty, line: 23, col: [0, 556] }) 
-Err(InvalidIdent) 
-Ok(Token { content: Empty, line: 23, col: [0, 557] }) 
-Ok(Token { content: Ident("do"), line: 23, col: [0, 559] }) 
-Ok(Token { content: Empty, line: 23, col: [0, 560] }) 
-Ok(Token { content: Sign(Single(LeftCurlyBracket)), line: 23, col: [0, 561] }) 
-Ok(Token { content: BreakLine, line: 24, col: [0, 561] }) 
-Ok(Token { content: Empty, line: 24, col: [0, 562] }) 
-Ok(Token { content: Empty, line: 24, col: [0, 563] }) 
-Ok(Token { content: Empty, line: 24, col: [0, 564] }) 
-Ok(Token { content: Empty, line: 24, col: [0, 565] }) 
-Ok(Token { content: Empty, line: 24, col: [0, 566] }) 
-Ok(Token { content: Empty, line: 24, col: [0, 567] }) 
-Ok(Token { content: Empty, line: 24, col: [0, 568] }) 
-Ok(Token { content: Empty, line: 24, col: [0, 569] }) 
-Ok(Token { content: Ident("i"), line: 24, col: [0, 570] }) 
-Ok(Token { content: Empty, line: 24, col: [0, 571] }) 
-Ok(Token { content: Sign(Single(Colon)), line: 24, col: [0, 572] }) 
-Ok(Token { content: Sign(Single(Minus)), line: 24, col: [0, 573] }) 
-Ok(Token { content: Empty, line: 24, col: [0, 574] }) 
-Ok(Token { content: Ident("print"), line: 24, col: [0, 579] }) 
-Ok(Token { content: BreakLine, line: 25, col: [0, 579] }) 
-Ok(Token { content: Empty, line: 25, col: [0, 580] }) 
-Ok(Token { content: Empty, line: 25, col: [0, 581] }) 
-Ok(Token { content: Empty, line: 25, col: [0, 582] }) 
-Ok(Token { content: Empty, line: 25, col: [0, 583] }) 
-Ok(Token { content: Sign(Single(RightCurlyBracket)), line: 25, col: [0, 584] }) 
-Ok(Token { content: BreakLine, line: 26, col: [0, 584] }) 
-Ok(Token { content: Empty, line: 26, col: [0, 585] }) 
-Ok(Token { content: Empty, line: 26, col: [0, 586] }) 
-Ok(Token { content: Empty, line: 26, col: [0, 587] }) 
-Ok(Token { content: Empty, line: 26, col: [0, 588] }) 
-Ok(Token { content: Ident("print"), line: 26, col: [0, 593] }) 
-Ok(Token { content: Sign(Single(LeftSquareBracket)), line: 26, col: [0, 594] }) 
-Err(InvalidIdent) 
-Ok(Token { content: Sign(Single(RightSquareBracket)), line: 26, col: [0, 595] }) 
-Ok(Token { content: Sign(Single(Semicolon)), line: 26, col: [0, 596] }) 
-Ok(Token { content: BreakLine, line: 27, col: [0, 596] }) 
-Ok(Token { content: Empty, line: 27, col: [0, 597] }) 
-Ok(Token { content: Empty, line: 27, col: [0, 598] }) 
-Ok(Token { content: Empty, line: 27, col: [0, 599] }) 
-Ok(Token { content: Empty, line: 27, col: [0, 600] }) 
-Ok(Token { content: Ident("back"), line: 27, col: [0, 604] }) 
-Ok(Token { content: Empty, line: 27, col: [0, 605] }) 
-Err(InvalidIdent) 
-Ok(Token { content: Sign(Single(Semicolon)), line: 27, col: [0, 606] }) 
-Ok(Token { content: BreakLine, line: 28, col: [0, 606] }) 
-Ok(Token { content: Sign(Single(RightCurlyBracket)), line: 28, col: [0, 607] }) 
-test token::token_test::token_stream ... ok
+Empty
+Ident("use")
+Empty
+Ident("std")
+Sign(Double(ColonColon))
+Ident("ffi")
+Sign(Double(ColonColon))
+Ident("os")
+Sign(Double(ColonColon))
+Ident("linux")
+Sign(Double(ColonColon))
+Ident("write")
+Sign(Single(Semicolon))
+BreakLine
+BreakLine
+KeyWords(F)
+Sign(Single(LeftSquareBracket))
+Ident("i32")
+Sign(Single(RightSquareBracket))
+Empty
+Sign(Single(Tilde))
+Sign(Single(Greater))
+Empty
+Ident("unit")
+Empty
+Ident("print")
+Empty
+Ident("v")
+Empty
+Sign(Single(Equal))
+Empty
+Sign(Single(LeftCurlyBracket))
+BreakLine
+Empty
+Empty
+Empty
+Empty
+Ident("write")
+Sign(Single(LeftParenthesis))
+Sign(Single(Ampersand))
+Ident("v")
+Empty
+Ident("cast")
+Empty
+Sign(Single(Asterisk))
+Empty
+Ident("i32")
+Sign(Single(RightParenthesis))
+Sign(Single(Semicolon))
+BreakLine
+Sign(Single(RightCurlyBracket))
+BreakLine
+BreakLine
+Ident("struct")
+Empty
+Sign(Single(LeftSquareBracket))
+Ident("T")
+Empty
+Sign(Single(Colon))
+Sign(Single(Less))
+Empty
+KeyWords(Y)
+Sign(Single(RightSquareBracket))
+Empty
+Ident("Test")
+Empty
+Sign(Single(LeftCurlyBracket))
+BreakLine
+Empty
+Empty
+Empty
+Empty
+Ident("value")
+Sign(Single(Colon))
+Empty
+Ident("T")
+BreakLine
+Sign(Single(RightCurlyBracket))
+BreakLine
+BreakLine
+KeyWords(F)
+Sign(Single(LeftSquareBracket))
+Ident("unit")
+Sign(Single(RightSquareBracket))
+Empty
+Sign(Single(Tilde))
+Sign(Single(Greater))
+Empty
+Ident("i32")
+Empty
+Ident("main")
+Empty
+Sign(Single(Equal))
+Empty
+Sign(Single(LeftCurlyBracket))
+BreakLine
+Empty
+Empty
+Empty
+Empty
+Ident("let")
+Empty
+Ident("value")
+Sign(Single(Colon))
+Empty
+KeyWords(Y)
+Sign(Single(LeftSquareBracket))
+Ident("i32")
+Sign(Single(Comma))
+Empty
+Ident("u32")
+Sign(Single(RightSquareBracket))
+Empty
+Sign(Single(Equal))
+Empty
+Ident("v")
+Empty
+Sign(Single(LeftCurlyBracket))
+Empty
+Ident("v")
+Empty
+Ident("as")
+Empty
+Ident("u32")
+Empty
+Sign(Single(RightCurlyBracket))
+Sign(Single(Semicolon))
+Empty
+Comment("Closure")
+BreakLine
+Empty
+Empty
+Empty
+Empty
+Ident("let")
+Empty
+Ident("x")
+Empty
+Sign(Single(Equal))
+Empty
+Sign(Single(Hash))
+Sign(Single(LeftSquareBracket))
+Constant(Number("1"))
+Sign(Single(Comma))
+Empty
+Constant(Number("2"))
+Sign(Single(Comma))
+Empty
+Constant(Number("3"))
+Sign(Single(RightSquareBracket))
+Sign(Single(Semicolon))
+Empty
+Comment("list Constant")
+BreakLine
+Empty
+Empty
+Empty
+Empty
+Ident("let")
+Empty
+Ident("v")
+Empty
+Sign(Single(Equal))
+Empty
+Sign(Single(Hash))
+Sign(Single(LeftSquareBracket))
+Sign(Single(VerticalBar))
+Empty
+Sign(Single(VerticalBar))
+Sign(Single(RightSquareBracket))
+Sign(Single(Semicolon))
+Empty
+Comment("Array Constant")
+BreakLine
+Empty
+Empty
+Empty
+Empty
+Ident("let")
+Empty
+Ident("x")
+Empty
+Sign(Single(Equal))
+Empty
+Sign(Single(Hash))
+Sign(Single(LeftParenthesis))
+Constant(Number("1"))
+Sign(Single(Comma))
+Empty
+Sign(Single(Quotation))
+Constant(Number("2"))
+Sign(Single(Quotation))
+Sign(Single(Comma))
+Empty
+Sign(Single(Hash))
+Sign(Single(LeftParenthesis))
+Ident("Some")
+Sign(Single(LeftParenthesis))
+Constant(Number("1"))
+Sign(Single(RightParenthesis))
+Sign(Single(RightParenthesis))
+Sign(Single(Semicolon))
+Empty
+Comment("Tuple Constant")
+BreakLine
+Empty
+Empty
+Empty
+Empty
+Ident("let")
+Empty
+Ident("x")
+Empty
+Sign(Single(Equal))
+Empty
+Sign(Single(Less))
+Sign(Single(VerticalBar))
+Empty
+Ident("x")
+Empty
+Sign(Single(Minus))
+Sign(Single(Greater))
+Empty
+Ident("box")
+Empty
+Constant(Number("1"))
+Sign(Single(Comma))
+Empty
+Ident("y")
+Empty
+Sign(Single(Minus))
+Sign(Single(Greater))
+Empty
+Constant(Number("2"))
+Empty
+Sign(Single(VerticalBar))
+Sign(Single(Greater))
+Sign(Single(Semicolon))
+Empty
+Comment("Map")
+BreakLine
+Empty
+Empty
+Empty
+Empty
+Ident("let")
+Empty
+Ident("x")
+Empty
+Sign(Single(Colon))
+Empty
+Ident("Test")
+Empty
+Sign(Single(Equal))
+Empty
+Ident("box")
+Empty
+Ident("Test")
+Empty
+Sign(Single(Hash))
+Sign(Single(LeftCurlyBracket))
+Empty
+Ident("value")
+Empty
+Sign(Single(RightCurlyBracket))
+Sign(Single(Semicolon))
+Empty
+Comment("Test heap")
+BreakLine
+Empty
+Empty
+Empty
+Empty
+Ident("let")
+Empty
+Ident("c")
+Empty
+Sign(Single(Equal))
+Empty
+Sign(Single(Apostrophe))
+Sign(Single(BackSlash))
+Ident("u")
+Sign(Single(LeftCurlyBracket))
+Constant(Number("0000"))
+Sign(Single(RightCurlyBracket))
+Sign(Single(Apostrophe))
+Sign(Single(Semicolon))
+Empty
+Comment("char")
+BreakLine
+Empty
+Empty
+Empty
+Empty
+Ident("let")
+Empty
+Ident("s")
+Empty
+Sign(Single(Equal))
+Empty
+Sign(Single(Quotation))
+Sign(Single(BackSlash))
+Ident("u")
+Sign(Single(LeftCurlyBracket))
+Constant(Number("1234"))
+Sign(Single(RightCurlyBracket))
+Sign(Single(BackSlash))
+Ident("u")
+Sign(Single(LeftCurlyBracket))
+Constant(Number("4567"))
+Sign(Single(RightCurlyBracket))
+Sign(Single(BackSlash))
+Ident("u")
+Sign(Single(LeftCurlyBracket))
+Constant(Number("7890"))
+Sign(Single(RightCurlyBracket))
+Sign(Single(Quotation))
+Sign(Single(Semicolon))
+Empty
+Comment("&string")
+BreakLine
+Empty
+Empty
+Empty
+Empty
+Ident("let")
+Empty
+Ident("y")
+Sign(Single(Colon))
+Empty
+Ident("async")
+Empty
+Ident("block")
+Empty
+Ident("bool")
+Empty
+Sign(Single(Equal))
+Empty
+Ident("async")
+Empty
+Sign(Single(LeftCurlyBracket))
+BreakLine
+Empty
+Empty
+Empty
+Empty
+Empty
+Empty
+Empty
+Empty
+Ident("false")
+BreakLine
+Empty
+Empty
+Empty
+Empty
+Sign(Single(RightCurlyBracket))
+BreakLine
+Empty
+Empty
+Empty
+Empty
+Ident("let")
+Empty
+Ident("x")
+Empty
+Sign(Single(Colon))
+Empty
+Ident("bool")
+Empty
+Sign(Single(Equal))
+Empty
+Constant(Number("1"))
+Empty
+Sign(Single(Greater))
+Empty
+Constant(Number("2"))
+Sign(Single(Semicolon))
+BreakLine
+Empty
+Empty
+Empty
+Empty
+Ident("for")
+Empty
+Ident("i")
+Empty
+Ident("in")
+Empty
+Constant(Number("0"))
+Empty
+Ident("to")
+Empty
+Constant(Number("1000"))
+Empty
+Ident("do")
+Empty
+Sign(Single(LeftCurlyBracket))
+BreakLine
+Empty
+Empty
+Empty
+Empty
+Empty
+Empty
+Empty
+Empty
+Ident("i")
+Empty
+Sign(Single(Colon))
+Sign(Single(Minus))
+Sign(Single(Greater))
+Empty
+Ident("print")
+BreakLine
+Empty
+Empty
+Empty
+Empty
+Sign(Single(RightCurlyBracket))
+BreakLine
+Empty
+Empty
+Empty
+Empty
+Ident("print")
+Sign(Single(LeftSquareBracket))
+Constant(Number("1"))
+Sign(Single(RightSquareBracket))
+Sign(Single(Semicolon))
+BreakLine
+Empty
+Empty
+Empty
+Empty
+Ident("back")
+Empty
+Constant(Number("1"))
+Sign(Single(Semicolon))
+BreakLine
+Sign(Single(RightCurlyBracket))
+test token::token_test::test_comment_token ... ok
 
-test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.00s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.00s
 
