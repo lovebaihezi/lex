@@ -1,13 +1,4 @@
-use token::TokenStream;
-
-mod dfa;
-mod graph;
-mod lex;
-mod regular;
-mod token;
-mod word;
-mod pre_work;
-mod macros;
+use lex::token::TokenStream;
 
 fn main() {
     let mut args = std::env::args().skip(1);

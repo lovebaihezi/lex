@@ -244,7 +244,7 @@ KeyWords! ({Debug, Clone, Copy},
     While, When, Match, Macro, Public, Dynamic,
     Box, Atomic, Const, Static, Lazy, In, From,
     To, Reference, Extern, Do, Algin, Mutable,
-    Block, Expression,
+    Block, Expression, Let
 );
 
 #[derive(Debug)]

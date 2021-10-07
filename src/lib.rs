@@ -1,7 +1,9 @@
-extern crate proc_macro;
-use proc_macro::TokenStream;
-
-#[proc_macro_derive(EnumMateInfo)]
-pub fn derive(input: TokenStream) -> TokenStream {
-    input
-}
+pub mod dfa;
+pub mod graph;
+pub mod lex;
+pub mod macros;
+pub mod pre_work;
+pub mod regular;
+pub mod token;
+pub mod word;
+pub mod nfa;
