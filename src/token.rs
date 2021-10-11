@@ -575,15 +575,6 @@ impl TryFrom<char> for Sign {
     type Error = char;
 
     fn try_from(value: char) -> Result<Self, Self::Error> {
-        // match current {
-        //     '\u{0000}'..='\u{0008}' | '\u{000E}'..='\u{001F}' => Err(TokenError::ControlCode),
-        //     '!' | '#' | '$' | '%' | '&' | '(' | ')' | '*' | '+' | ',' | '-' | '.' | ':'
-        //     | ';' | '<' | '=' | '>' | '?' | '@' | '[' | '\\' | ']' | '^' | '_' | '`' | '{'
-        //     | '|' | '}' | '~' | '/' | '\'' | '"' | ' ' | '\t' | '\r' | '\n' => {
-        //         Ok(Sign(Sign::Single(Single::from(current))))
-        //     }
-        //     _ =>
-        // }
         let single: Result<Single, SignError> = value.try_into();
         match single {
             Ok(v) => Ok(Sign::Single(v)),
@@ -627,7 +618,9 @@ unsafe impl IsSign for char {
         }
     }
 }
-
+// BUG:
+// first: constant string not correct: like "123___" will become Constant(Number("123"))
+// second: draw the dfa for this
 impl<'a> Iterator for TokenStream<'a> {
     fn next(self: &mut Self) -> Option<Self::Item> {
         while let Some(current) = self.stream.next() {

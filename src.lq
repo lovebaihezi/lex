@@ -18,6 +18,8 @@ Fun[unit] ~> i32 main = {
     Let x : Test = Box Test #{ value }; // Test heap
     Let c = '\u{0000}'; // char
     Let s = "\u{1234}\u{4567}\u{7890}"; // &string
+    Let x = "12_3";
+    let g = "1";
     Let y: Async Block bool = Async {
         false
     }
