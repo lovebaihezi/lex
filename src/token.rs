@@ -4,6 +4,8 @@ use std::{
     ops::Add,
 };
 
+use colored::{ColoredString, Colorize};
+
 macro_rules! KeyWords {
     ({$($derive: path),*$(,)*}, $($id:ident),*$(,)*) => {
         #[derive($($derive),*)]
@@ -12,15 +14,15 @@ macro_rules! KeyWords {
         }
         const LEN:usize = [$(KeyWords::$id,)+].len();
         const KEYWORDS_ARRAY: [KeyWords; LEN] = [$(KeyWords::$id,)+];
-        const KEYWORDS_STRING: [&'static str; LEN] = [$(stringify!(KeyWords::$id),)+];
+        const KEYWORDS_STRING: [&'static str; LEN] = [$(stringify!($id),)+];
         const KEYWORDS_LENGTHS: [u32; LEN] = [$(stringify!($id).len() as u32,)+];
         impl KeyWords {
             #[inline]
-            fn len(&self) -> u32 {
+            pub fn len(&self) -> u32 {
                 unsafe { *KEYWORDS_LENGTHS.get_unchecked(*self as usize) }
             }
             #[inline]
-            fn get_all<'a>() -> &'a [KeyWords] {
+            pub fn get_all<'a>() -> &'a [KeyWords] {
                 &KEYWORDS_ARRAY
             }
         }
@@ -158,6 +160,22 @@ macro_rules! Double {
     }
 }
 
+macro_rules! Triple {
+    {$($id:ident => $e:expr),*$(,)*} => {
+        #[derive(Debug, Clone, Copy)]
+        pub enum Triple {
+            $($id,)*
+        }
+        impl ToString for Triple {
+            fn to_string(&self) -> String {
+                match self {
+                    $(Self::$id => $e,)*
+                }.to_string()
+            }
+        }
+    };
+}
+
 Single!({
     Exclamation       => '!',
     Quotation         => '"',
@@ -238,7 +256,7 @@ ConstArray!(
 );
 
 KeyWords! ({Debug, Clone, Copy},
-    Back ,Move, F, Y, Yield, Async, Await, Trait,
+    Back ,Move, Fun, Yun, Yield, Async, Await, Trait,
     Implement, For, Bind, Type, Enum, Struct,
     Parallel, Cast, Tobe, Module, Where, Loop,
     While, When, Match, Macro, Public, Dynamic,
@@ -269,12 +287,11 @@ pub enum SignError {
     NotMatch,
 }
 
-#[derive(Debug, Clone, Copy)]
-pub enum Triple {
-    EqualEqualEqual,       // ===
-    PeriodPeriodPeriod,    // ...
-    ExclamationEqualEqual, // !==
-    GreaterGreaterGreater, // >>>
+Triple! {
+    EqualEqualEqual => "===",
+    PeriodPeriodPeriod => "...",
+    ExclamationEqualEqual => "!==",
+    GreaterGreaterGreater => ">>>",
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -427,25 +444,33 @@ pub enum Tokens {
     BreakLine,
 }
 
-impl ToString for Tokens {
-    fn to_string(&self) -> String {
+impl Tokens {
+    pub fn to_string(&self) -> ColoredString {
         match self {
-            Tokens::Ident(s) => format!("{}", s),
-            Tokens::KeyWords(s) => todo!(),
-            Tokens::Constant(s) => todo!(),
-            Tokens::Comment(s) => todo!(),
+            Tokens::Ident(s) => format!("{}", s).white(),
+            Tokens::KeyWords(s) => s.to_string().red(),
+            Tokens::Constant(s) => match s {
+                Constant::String(s) => s.to_string(),
+                Constant::Char(c) => c.to_string(),
+                Constant::Number(n) => n.to_string(),
+            }
+            .yellow()
+            .bold(),
+            Tokens::Comment(s) => s.to_string().green().italic(),
             Tokens::Sign(s) => match s {
                 Sign::Single(s) => {
                     let x: char = (*s).into();
                     x
                 }
                 .to_string(),
-                Sign::Double(_) => todo!(),
-                Sign::Triple(_) => todo!(),
+                Sign::Double(v) => v.to_string(),
+                Sign::Triple(v) => v.to_string(),
                 Sign::Quadruple(_) => todo!(),
-            },
-            Tokens::Empty => " ".to_string(),
-            Tokens::BreakLine => "\n".to_string(),
+            }
+            .blue()
+            .underline(),
+            Tokens::Empty => " ".to_string().black(),
+            Tokens::BreakLine => "\n".to_string().black(),
         }
     }
 }
@@ -465,9 +490,9 @@ impl From<KeyWords> for Tokens {
 
 #[derive(Debug, Default)]
 pub struct Token {
-    content: Tokens,
-    line: u32,
-    col: [u32; 2],
+    pub content: Tokens,
+    pub line: u32,
+    pub col: [u32; 2],
 }
 
 pub struct TokenStream<'a> {
@@ -578,8 +603,8 @@ impl TryFrom<char> for Tokens {
             | '}' | '~' | '/' | '\'' | '"' => {
                 Ok(Tokens::Sign(Single::try_from(value).unwrap().into()))
             }
-            'F' => Ok(KeyWords::F.into()),
-            'Y' => Ok(KeyWords::Y.into()),
+            // 'F' => Ok(KeyWords::F.into()),
+            // 'Y' => Ok(KeyWords::Y.into()),
             ' ' => Ok(Tokens::Empty),
             '\r' => Ok(Tokens::Empty),
             '\n' => Ok(Tokens::BreakLine),
@@ -625,8 +650,8 @@ impl<'a> Iterator for TokenStream<'a> {
                                 | '"' => {
                                     Ok(Tokens::Sign(Single::try_from(current).unwrap().into()))
                                 }
-                                'F' => Ok(KeyWords::F.into()),
-                                'Y' => Ok(KeyWords::Y.into()),
+                                // 'F' => Ok(KeyWords::F.into()),
+                                // 'Y' => Ok(KeyWords::Y.into()),
                                 ' ' => Ok(Tokens::Empty),
                                 '\n' => Ok(Tokens::BreakLine),
                                 '\r' => continue,

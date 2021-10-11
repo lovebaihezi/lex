@@ -1,0 +1,4 @@
+Fun[unit] ~> i32 main = {
+    Let 1x:u32 = 1_1;
+    1
+}
