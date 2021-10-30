@@ -23,7 +23,6 @@ Fun[unit] ~> i32 main = {
     Let y: Async Block bool = Async {
         false
     }
-
     Let x : bool = 1 > 2;
     For i In 0 To 1000 Do {
         i :-> print

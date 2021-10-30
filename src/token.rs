@@ -1,4 +1,5 @@
 use std::{
+    collections::{HashMap, HashSet},
     convert::{TryFrom, TryInto},
     mem::swap,
     ops::Add,
@@ -24,17 +25,6 @@ macro_rules! KeyWords {
             #[inline]
             pub fn get_all<'a>() -> &'a [KeyWords] {
                 &KEYWORDS_ARRAY
-            }
-        }
-        impl<'a> TryFrom<&'a str> for KeyWords {
-            type Error = &'a str;
-            fn try_from(value: &'a str) -> Result<Self, Self::Error> {
-                match value {
-                    $(
-                        stringify!($id) => Ok(Self::$id),
-                    )+
-                    _ => Err(value)
-                }
             }
         }
         impl ToString for KeyWords {
@@ -447,7 +437,7 @@ pub enum Tokens {
 impl Tokens {
     pub fn to_string(&self) -> ColoredString {
         match self {
-            Tokens::Ident(s) => format!("{}", s).white(),
+            Tokens::Ident(s) => s.to_string().white(),
             Tokens::KeyWords(s) => s.to_string().red(),
             Tokens::Constant(s) => match s {
                 Constant::String(s) => s.to_string(),
@@ -472,6 +462,10 @@ impl Tokens {
             Tokens::Empty => " ".to_string().black(),
             Tokens::BreakLine => "\n".to_string().black(),
         }
+    }
+
+    pub fn next(&mut self, c: char) -> Result<Tokens, TokenError> {
+        todo!()
     }
 }
 
@@ -498,6 +492,7 @@ pub struct Token {
 pub struct TokenStream<'a> {
     stream: Box<dyn Iterator<Item = char> + 'a>,
     tokens: Result<Tokens, TokenError>,
+    key_words: HashMap<String, KeyWords>,
     line: u32,
     col: u32,
 }
@@ -523,6 +518,11 @@ impl<'a, 'b: 'a> TokenStream<'a> {
         TokenStream {
             stream: v,
             tokens: Ok(Default::default()),
+            key_words: KEYWORDS_STRING
+                .iter()
+                .zip(KEYWORDS_ARRAY.iter())
+                .map(|(s, k)| (s.to_string(), *k))
+                .collect(),
             line: Default::default(),
             col: Default::default(),
         }
@@ -583,79 +583,72 @@ impl TryFrom<char> for Sign {
     }
 }
 
-impl TryFrom<char> for Tokens {
-    type Error = TokenError;
-    fn try_from(value: char) -> Result<Self, Self::Error> {
-        match value {
-            '\u{0000}'..='\u{0008}' | '\u{000E}'..='\u{001F}' => Err(TokenError::ControlCode),
-            '0'..='9' => Ok(Tokens::Constant(Constant::Number(String::from(value)))),
-            '!' | '#' | '$' | '%' | '&' | '(' | ')' | '*' | '+' | ',' | '-' | '.' | ':' | ';'
-            | '<' | '=' | '>' | '?' | '@' | '[' | '\\' | ']' | '^' | '_' | '`' | '{' | '|'
-            | '}' | '~' | '/' | '\'' | '"' => {
-                Ok(Tokens::Sign(Single::try_from(value).unwrap().into()))
-            }
-            // 'F' => Ok(KeyWords::F.into()),
-            // 'Y' => Ok(KeyWords::Y.into()),
-            ' ' => Ok(Tokens::Empty),
-            '\r' => Ok(Tokens::Empty),
-            '\n' => Ok(Tokens::BreakLine),
-            v => Ok(Tokens::Ident(v.to_string())),
-        }
-    }
+fn is_sign(c: char) -> bool {
+    matches!(
+        c,
+        '!' | '#'
+            | '$'
+            | '%'
+            | '&'
+            | '('
+            | ')'
+            | '*'
+            | '+'
+            | ','
+            | '-'
+            | '.'
+            | ':'
+            | ';'
+            | '<'
+            | '='
+            | '>'
+            | '?'
+            | '@'
+            | '['
+            | '\\'
+            | ']'
+            | '^'
+            | '_'
+            | '`'
+            | '{'
+            | '|'
+            | '}'
+            | '~'
+            | '/'
+            | '\''
+            | '"'
+    )
 }
 
-unsafe trait IsSign {
-    fn is_sign(&self) -> bool;
-}
-
-unsafe impl IsSign for char {
-    fn is_sign(&self) -> bool {
-        match *self {
-            '!' | '#' | '$' | '%' | '&' | '(' | ')' | '*' | '+' | ',' | '-' | '.' | ':' | ';'
-            | '<' | '=' | '>' | '?' | '@' | '[' | '\\' | ']' | '^' | '_' | '`' | '{' | '|'
-            | '}' | '~' | '/' | '\'' | '"' => true,
-            _ => false,
-        }
-    }
-}
-// BUG:
-// first: constant string not correct: like "123___" will become Constant(Number("123"))
-// second: draw the dfa for this
 impl<'a> Iterator for TokenStream<'a> {
-    fn next(self: &mut Self) -> Option<Self::Item> {
+    fn next(&mut self) -> Option<Self::Item> {
         while let Some(current) = self.stream.next() {
-            let mut value: Result<Tokens, TokenError> = match &mut self.tokens {
+            let mut value: Result<Tokens, TokenError> = match self.tokens {
                 Ok(token) => match token {
                     Tokens::Ident(ident) => {
-                        let key_word: Result<KeyWords, &str> = ident.as_str().try_into();
-                        match key_word {
-                            Ok(v) => {
-                                self.tokens = Ok(v.into());
-                                current.try_into()
+                        if let Some(v) = self.key_words.get(&ident) {
+                            self.tokens = Ok(Tokens::KeyWords(*v));
+                        }
+                        match current {
+                            '\u{0000}'..='\u{0008}' | '\u{000E}'..='\u{001F}' => {
+                                Err(TokenError::ControlCode)
                             }
-                            Err(_) => match current {
-                                '\u{0000}'..='\u{0008}' | '\u{000E}'..='\u{001F}' => {
-                                    Err(TokenError::ControlCode)
-                                }
-                                '!' | '#' | '$' | '%' | '&' | '(' | ')' | '*' | '+' | ',' | '-'
-                                | '.' | ':' | ';' | '<' | '=' | '>' | '?' | '@' | '[' | '\\'
-                                | ']' | '^' | '_' | '`' | '{' | '|' | '}' | '~' | '/' | '\''
-                                | '"' => {
-                                    Ok(Tokens::Sign(Single::try_from(current).unwrap().into()))
-                                }
-                                // 'F' => Ok(KeyWords::F.into()),
-                                // 'Y' => Ok(KeyWords::Y.into()),
-                                ' ' => Ok(Tokens::Empty),
-                                '\n' => Ok(Tokens::BreakLine),
-                                '\r' => continue,
-                                _ => {
-                                    ident.push(current);
-                                    continue;
-                                }
-                            },
+                            '!' | '#' | '$' | '%' | '&' | '(' | ')' | '*' | '+' | ',' | '-'
+                            | '.' | ':' | ';' | '<' | '=' | '>' | '?' | '@' | '[' | '\\' | ']'
+                            | '^' | '_' | '`' | '{' | '|' | '}' | '~' | '/' | '\'' | '"' => {
+                                Ok(Tokens::Sign(Single::try_from(current).unwrap().into()))
+                            }
+
+                            ' ' => Ok(Tokens::Empty),
+                            '\n' => Ok(Tokens::BreakLine),
+                            '\r' => continue,
+                            _ => {
+                                ident.push(current);
+                                continue;
+                            }
                         }
                     }
-                    Tokens::KeyWords(_) => current.try_into(),
+                    Tokens::KeyWords(_) => todo!(),
                     Tokens::Constant(constant) => match constant {
                         Constant::String(s) => match current {
                             '"' => {
@@ -676,9 +669,9 @@ impl<'a> Iterator for TokenStream<'a> {
                                 continue;
                             }
                             '_' => continue,
-                            _ => current.try_into(),
+                            _ => todo!(),
                         },
-                        _ => current.try_into(),
+                        _ => todo!(),
                     },
                     Tokens::Comment(s) => {
                         if current == '\n' {
@@ -696,7 +689,7 @@ impl<'a> Iterator for TokenStream<'a> {
                             continue;
                         }
                         v => {
-                            let s: Result<Tokens, TokenError> = current.try_into();
+                            let s: Result<Tokens, TokenError> = todo!();
                             match s {
                                 Ok(Tokens::Sign(sign)) => match sign + *v {
                                     Some(real) => {
@@ -709,9 +702,9 @@ impl<'a> Iterator for TokenStream<'a> {
                             }
                         }
                     },
-                    _ => current.try_into(),
+                    _ => todo!(),
                 },
-                Err(_) => current.try_into(),
+                Err(_) => todo!(),
             };
             let (line, col) = self.calc(&mut value);
             return Some(value.map(|content| Token { content, line, col }));
@@ -730,30 +723,4 @@ impl<'a> Iterator for TokenStream<'a> {
 }
 
 #[cfg(test)]
-mod token_test {
-    use super::{single_map, TokenStream};
-    #[test]
-    fn test_comment_token() {
-        for i in TokenStream::from(&std::fs::read_to_string("src.lq").unwrap()) {
-            println!("{:?}", i.unwrap().content);
-        }
-    }
-    #[test]
-    fn test_compile_time() {
-        for (index, v) in single_map().iter().enumerate() {
-            let c = index as u8 as char;
-            if c.is_ascii_punctuation() {
-                assert!(v.is_some());
-                let x: char = v.unwrap().into();
-                assert_eq!(c, x);
-            }
-        }
-    }
-    #[test]
-    fn token_stream() {
-        let content = std::fs::read_to_string("src.lq").unwrap();
-        for token in TokenStream::from(&content) {
-            println!("{:?} ", token);
-        }
-    }
-}
+mod token_test {}

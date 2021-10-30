@@ -1,4 +1,5 @@
 Fun[unit] ~> i32 main = {
-    Let 1x:u32 = 1_1;
+    Let 1x:u32 = 1_1;// this will checked wrong when syntax check.
+    Let v = "123"";//this should be checked when token generating
     1
 }
